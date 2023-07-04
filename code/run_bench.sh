@@ -2,8 +2,8 @@
 thread=(1 2 4 8 16 32 64)
 chunksize=64 # set the chunk size to (val * KB)
 
-IOsize="PARTSIZE" # set the benchmark to test partial-stripe write
-# IOsize="FULLSIZE" # set the benchmark to test full-stripe write
+# IOsize="PARTSIZE" # set the benchmark to test partial-stripe write
+IOsize="FULLSIZE" # set the benchmark to test full-stripe write
 
 sed -in-place -e '/^#define SCHUNK_SIZE/ c \#define SCHUNK_SIZE ('${chunksize}" * KB)" ./include/define.h
 

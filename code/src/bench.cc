@@ -83,12 +83,13 @@ int main(int argc, char *argv[])
     assert(NUM_DEV == (DATACHUNK_NUM + PARITYCHUNK_NUM));
     srand(time(0));
 
-    string lfile0 = "/dev/nvme0n1p4";
-    string lfile1 = "/dev/nvme1n1p4";
-    string lfile2 = "/dev/nvme2n1p4";
-    string lfile3 = "/dev/nvme3n1p4";
-    string lfile4 = "/dev/nvme4n1p4";
-    string lfile5 = "/dev/nvme5n1p4";
+    // to change 
+    string lfile0 = "/dev/nvme0n1";
+    string lfile1 = "/dev/nvme1n1";
+    string lfile2 = "/dev/nvme2n1";
+    string lfile3 = "/dev/nvme3n1";
+    string lfile4 = "/dev/nvme4n1";
+    // string lfile5 = "/dev/nvme5n1p4";
 
     // string lfile0 = "/dev/ram0";
     // string lfile1 = "/dev/ram1";
@@ -96,7 +97,8 @@ int main(int argc, char *argv[])
     // string lfile3 = "/dev/ram3";
     // string lfile4 = "/dev/ram4";
     // string lfile5 = "/dev/ram5";
-    vector<string> v_fileset{lfile0, lfile1, lfile2, lfile3, lfile4, lfile5};
+    // vector<string> v_fileset{lfile0, lfile1, lfile2, lfile3, lfile4, lfile5};
+    vector<string> v_fileset{lfile0, lfile1, lfile2, lfile3, lfile4}; // to change 
     assert(NUM_DEV <= v_fileset.size());
 
     cout << "Open Files" << endl;

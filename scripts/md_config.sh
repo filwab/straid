@@ -5,7 +5,7 @@ CHUNKSIZE="64K"
 
 # Assign mdadm with SSD device directories
 # the [-n] parameter should be modified to the number of used SSD devices in the array
-mdadm -v -C /dev/md5 -l 5 -n 6 -c ${CHUNKSIZE} --force /dev/nvme0n1 /dev/nvme1n1 /dev/nvme2n1 /dev/nvme3n1 /dev/nvme4n1 /dev/nvme5n1
+mdadm -v -C /dev/md5 -l 5 -n 5 -c ${CHUNKSIZE} --force /dev/nvme0n1 /dev/nvme1n1 /dev/nvme2n1 /dev/nvme3n1 /dev/nvme4n1
 
 sleep 3
 cat /proc/mdstat

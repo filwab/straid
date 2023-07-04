@@ -2,8 +2,8 @@
 ioengine=sync
 
 filename=/dev/md5
-bs=320K
-numjobs=32
+bs=64K
+numjobs=64
 
 runtime=10
 iodepth=1

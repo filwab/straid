@@ -97,8 +97,9 @@ Please note that StRAID is currently a prototype and may crash unexpectedly. If 
    Besides, the path of SSD devices and/or MD RAID should be assigned to the program.
 
    ```
-   vim ./include/main.cc
-   vim ./include/bench.cc
+   vim ./src/main.cc
+   vim ./src/bench.cc
+   vim ./src/trace_st.cc
 
    // Assign paths of SSD devices used in experiment
    string lfile0 = "/dev/nvme0n1";
@@ -108,6 +109,12 @@ Please note that StRAID is currently a prototype and may crash unexpectedly. If 
    string lfile4 = "/dev/nvme4n1";
    string lfile5 = "/dev/nvme5n1";
 
+   ```
+
+
+**Before compile the code**
+   ```
+   sudo chmod 777 -R ./code
    ```
 
 2. Compile StRAID prototype test program in the default settings.

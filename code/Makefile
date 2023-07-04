@@ -16,7 +16,7 @@ WARNINGS := -Wall -Wno-unused-variable -Wno-unused-but-set-variable -Wno-sign-co
 EXTRA_CFLAGS := -g -std=c++2a
 LIBS := -lpthread -lisal -luring -ltbb -lcds
 
-INC_DIR   = ./include ./include/concurrentqueue ./include/Bitmap
+INC_DIR   = ./include ./include/concurrentqueue ./include/Bitmap ./include/libcuckoo
 SRC_DIR   =	./src ./include
 OBJ_DIR   = ./obj
 BIN_DIR   = ./bin
