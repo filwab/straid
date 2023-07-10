@@ -1,6 +1,6 @@
 #!/bin/bash
 
-thread=16   # set the number of I/O-issuing threads
+thread=32   # set the number of I/O-issuing threads
 mdtype="5"
 mdpath="/dev/md5"
 

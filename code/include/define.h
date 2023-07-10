@@ -26,7 +26,7 @@ using namespace std;
 #define NUM_DEVFILES (DATACHUNK_NUM + PARITYCHUNK_NUM) 
 #define NUM_WORKERS NUM_THREADS                        // Number of RAID worker threads
 
-#define NUM_THREADS (16)
+#define NUM_THREADS (32)
 #define DATASET_SIZE (1 * GB)
 #define LOOP (1) // workload loop num
 #define USER_SPACE_LEN (50 * GB)
@@ -35,7 +35,7 @@ using namespace std;
 #define IO_SIZE (FULLSIZE) // to change 
 
 #define STRA_SPACE_LEN (50 * GB) // RAID Space footprint in a SSD
-#define SCHUNK_SIZE (8 * KB)
+#define SCHUNK_SIZE (64 * KB)
 #define SSTRIPE_SIZE (SCHUNK_SIZE * NUM_DEVFILES)
 #define SSTRIPE_DATASIZE (SCHUNK_SIZE * DATACHUNK_NUM)
 #define IDLE_QUELEN (4)

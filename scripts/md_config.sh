@@ -13,7 +13,7 @@ cat /proc/mdstat
 # Assign cachesize, the default stripe cache size of MD is 2048
 # Assign numworkers, the default number of workers of MD is 0
 cachesize=32768
-numworkers=64
+numworkers=64 
 
 echo "default MD Settings:"
 cat /sys/block/md5/md/group_thread_cnt 

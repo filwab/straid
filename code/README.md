@@ -78,18 +78,22 @@ Please note that StRAID is currently a prototype and may crash unexpectedly. If 
    ```
    vim ./include/define.h
 
-   // The number of running I/O-issuing Threads (IOT) and Workering Threads (WT)
+   // line 29: The number of running I/O-issuing Threads (IOT) and Workering Threads (WT)
    #define NUM_THREADS (16) 
    
-   // The dataset size and the number of repeating workload executions
+   // line 31: The dataset size and the number of repeating workload executions
    #define DATASET_SIZE (1 * GB)
    #define LOOP (1)    
 
-   // The I/O size of each read or write requests
+   // line 33-35: The I/O size of each read or write requests
    #define IO_SIZE PARTSIZE // IO size for partial-stripe write
    #define IO_SIZE FULLSIZE // IO size for full-stripe write
 
-   // Number of data chunks and parity chunks in a stripe, which have to be consist with the number of deployed SSD devices. For example, a 5+1 RAID-5 should set the DATACHUNK_NUM to 5 and the PARITYCHUNK_NUM to 1
+   // line 30-32:The trace space and user space len 
+   #define DATASET_SIZE (1 * GB) //size for dataset
+   #define USER_SPACE_LEN (50 * GB) // size for user-space
+
+   // line: 24-25: Number of data chunks and parity chunks in a stripe, which have to be consist with the number of deployed SSD devices. For example, a 5+1 RAID-5 should set the DATACHUNK_NUM to 5 and the PARITYCHUNK_NUM to 1
    #define DATACHUNK_NUM (5)                              
    #define PARITYCHUNK_NUM (1)                    
    ```
@@ -97,9 +101,9 @@ Please note that StRAID is currently a prototype and may crash unexpectedly. If 
    Besides, the path of SSD devices and/or MD RAID should be assigned to the program.
 
    ```
-   vim ./src/main.cc
-   vim ./src/bench.cc
-   vim ./src/trace_st.cc
+   vim ./src/main.cc // line: 50..57
+   vim ./src/bench.cc // line：87..101
+   vim ./src/trace_st.cc// line: 203..218
 
    // Assign paths of SSD devices used in experiment
    string lfile0 = "/dev/nvme0n1";
@@ -115,6 +119,16 @@ Please note that StRAID is currently a prototype and may crash unexpectedly. If 
 **Before compile the code**
    ```
    sudo chmod 777 -R ./code
+
+   &&& and &&&
+
+   cd scripts
+   vim md_config.sh
+   # Modify RAID build configures in scripts
+
+   ./md_config.sh
+   # Waiting for MD build to complete
+
    ```
 
 2. Compile StRAID prototype test program in the default settings.

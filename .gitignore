@@ -1,11 +1,16 @@
 # 忽略isa-l、libcuckoo、liburing和FlameGraph等工具本地环境改变的更新
-code/include/isa-l/
-code/include/libcuckoo/
-code/include/liburing/
-scripts/FlameGraph/
+code/include/isa-l/*
+code/include/libcuckoo/*
+code/include/liburing/*
+scripts/FlameGraph/*
 
 # 忽略编译等.o和日志文件
-code/bin/
-code/obj/
-scripts/fio_results.log
-scripts/FlameGraph/
+code/bin/*
+code/obj/*
+code/*.log
+code/*.txt
+scripts/*.log
+scripts/*.txt
+
+# 忽略统计图的绘制等文件
+code/draw/*.png

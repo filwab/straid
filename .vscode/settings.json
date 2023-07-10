@@ -68,5 +68,7 @@
         "typeinfo": "cpp",
         "variant": "cpp"
     },
-    "C_Cpp.errorSquiggles": "enabled"
+    "C_Cpp.errorSquiggles": "enabled",
+    "search.quickOpen.includeSymbols": false,
+    "git.ignoreLimitWarning": true
 }
