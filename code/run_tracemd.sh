@@ -1,11 +1,11 @@
 #!/bin/bash
 
-thread=32   # set the number of I/O-issuing threads
+thread=8   # set the number of I/O-issuing threads
 mdtype="5"
 mdpath="/dev/md5"
 
 sed -in-place -e '/^#define NUM_THREADS/ c \#define NUM_THREADS ('${thread}")" ./include/define.h
-make -j4
+make -j8
 
 echo "" > ./results/MD_trace_results.txt
 

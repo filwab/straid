@@ -153,7 +153,7 @@ Please note that StRAID is currently a prototype and may crash unexpectedly. If 
    ```
 
    ```
-   ./run_bench.sh
+   sudo ./run_bench.sh //sudo give access to /dev/md5 nvme01 and ..
    ```
 
    Use the `dstat` tool to monitor disk I/O

@@ -1,6 +1,6 @@
 #!/bin/bash
 # thread=(1 2 4 8 16 32 64)
-thread=(1 2 4 8 16 32 64)
+thread=(1 2 4 8 16)
 chunksize=64 # set the chunk size to (val * KB)
 
 IOsize="PARTSIZE" # set the benchmark to test partial-stripe write
