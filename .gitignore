@@ -14,3 +14,7 @@ scripts/*.txt
 
 # 忽略统计图的绘制等文件
 code/draw/*.png
+
+build/
+code/.cache/
+code/
