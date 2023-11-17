@@ -5,8 +5,8 @@ code/include/liburing/*
 scripts/FlameGraph/*
 
 # 忽略编译等.o和日志文件
-code/bin/*
-code/obj/*
+code/bin/
+code/obj/
 code/*.log
 code/*.txt
 scripts/*.log
@@ -19,3 +19,5 @@ build/
 code/.cache/
 code/.clangd/index/
 code/perf*
+code/bin/
+code/obj/

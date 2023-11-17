@@ -3,12 +3,16 @@ ignore = all
 [submodule "code/include/isa-l"]
 	path = code/include/isa-l
 	url = https://github.com/intel/isa-l
+	ignore = all
 [submodule "code/include/libcuckoo"]
 	path = code/include/libcuckoo
 	url = https://github.com/efficient/libcuckoo
+	ignore = all
 [submodule "code/include/liburing"]
 	path = code/include/liburing
 	url = https://github.com/axboe/liburing
+	ignore = all
 [submodule "scripts/FlameGraph"]
 	path = scripts/FlameGraph
 	url = https://github.com/brendangregg/FlameGraph
+	ignore = all
