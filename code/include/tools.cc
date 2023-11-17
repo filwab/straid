@@ -239,6 +239,7 @@ void iouring_rprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t
     iov->iov_base = buf;
     iov->iov_len = length;
     io_uring_prep_readv(sqe, fd, iov, 1, dev_off);
+    sqe->usr_flag = 1024;
 }
 
 uint64_t iouring_wsubmit(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length)
@@ -274,6 +275,7 @@ bool iouring_wait(io_uring *ring, uint wait_count)
     {
         struct io_uring_cqe *cqe;
         io_uring_wait_cqe(ring, &cqe);
+        printf("cqe->user_data:%llu\n", cqe->user_data);
         io_uring_cqe_seen(ring, cqe);
     }
     return true;

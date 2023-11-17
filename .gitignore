@@ -17,4 +17,5 @@ code/draw/*.png
 
 build/
 code/.cache/
-code/
+code/.clangd/index/
+code/perf*
