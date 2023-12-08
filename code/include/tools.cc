@@ -76,7 +76,7 @@ double toc(int i)
 {
     clock_gettime(CLOCK_ID, &end_clock[i]);
 
-    unsigned long time_use = (end_clock[i].tv_sec - start_clock[i].tv_sec) * 1000000000 + (end_clock[i].tv_nsec - start_clock[i].tv_nsec);
+    unsigned long time_use = (end_clock[i].tv_sec - start_clock[i].tv_sec) * 1000000000 + (end_clock[i].tv_nsec - start_clock[i].tv_nsec);//gql-分别计算秒部分和纳秒部分差值
     return time_use * 1.0;
 }
 
@@ -239,7 +239,9 @@ void iouring_rprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t
     iov->iov_base = buf;
     iov->iov_len = length;
     io_uring_prep_readv(sqe, fd, iov, 1, dev_off);
+    sqe->user_data = 1024;
     sqe->usr_flag = 1024;
+    // printf("Read STD | usr_flag:%llu, user_data:%llu, personality:%hu\n", sqe->usr_flag, sqe->user_data,sqe->personality);
 }
 
 uint64_t iouring_wsubmit(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length)

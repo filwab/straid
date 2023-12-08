@@ -25,9 +25,9 @@ bool raid_select(uint64_t length);
 class StorageMod
 {
 public:
-    int num_Devs;
-    int num_datas;
-    int num_paritys;
+    int num_Devs;//gql-阵列中盘的总数量
+    int num_datas;//gql-数据盘的数量
+    int num_paritys;//gql-校验盘的数量
 
     V_DevFiles *v_stdfiles;
 
@@ -38,10 +38,10 @@ public:
     SDecodeMod *s_decodemod;
 
 public:
-    V_UserQue v_workinque;
-    V_BatchQue v_batchque;
+    V_UserQue v_workinque;//gql-用户请求队列向量--Vector of User Queues
+    V_BatchQue v_batchque;//gql-做两段提交机制设计的数据结构--Vector of Batch Queues
 
-    vector<vector<DIO_Info>> v_batchque2;
+    vector<vector<DIO_Info>> v_batchque2;/*gql-这是一个二维向量，其中每个元素都是一个vector<DIO_Info>。DIO_Info是一个结构体，用于表示设备IO信息。因此，v_batchque2可以用来存储和管理多个设备IO请求队列。*/
     mutex v_batchquelk[NUM_THREADS];
 
     // thread v_raid_workers[NUM_WORKERS];
@@ -63,7 +63,7 @@ public:
         s_encodemod = new SEncodeMod(num_datas, num_paritys, SCHUNK_SIZE, v_stdfiles, meta_mod);
         s_decodemod = new SDecodeMod(num_datas, num_paritys, SCHUNK_SIZE, v_stdfiles, meta_mod);
 
-        for (size_t i = 0; i < NUM_WORKERS; i++)
+        for (size_t i = 0; i < NUM_WORKERS; i++)//gql-为各个线程初始化各请求队列向量
         {
             UserQueue *workerque = new UserQueue(i);
             v_workinque.emplace_back(workerque);

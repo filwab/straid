@@ -84,7 +84,7 @@ void worker_run(int thread_id,
 
     for (size_t io = 0; io < count; io++)
     {
-        offset = off_l->at(off_cnt.fetch_add(1));
+        offset = off_l->at(off_cnt.fetch_add(1));//gql-多个线程从同一个vector中取出一个值，原子操作保证请求按序被多个线程取下来执行
         length = len_l->at(len_cnt.fetch_add(1));
         iodir = iodir_l->at(iodir_cnt.fetch_add(1));
 
@@ -122,7 +122,7 @@ void worker_run(int thread_id,
         }
         G_IOCOUNT.fetch_add(1);
         double time = toc(10 + thread_id);
-        IO_LatArray[thread_id].emplace_back(time);
+        IO_LatArray[thread_id].emplace_back(time);//记录的是读写的所有请求的延迟
     }
     return;
 }
@@ -150,7 +150,7 @@ void collector_run(TTest_Item *citem)
         // cout << now_written << " " << now_read << " " << now_iocnt << endl;
     }
 
-    vector<uint64_t> *temp = merge_IOLat(G_NUM_WORKERS);
+    vector<uint64_t> *temp = merge_IOLat(G_NUM_WORKERS);//gql-将多个线程的延迟数据合并成一个排序后的vector
     citem->all_IOLat_list.insert(citem->all_IOLat_list.end(), temp->begin(), temp->end());
 
     citem->all_data_written = G_DATA_WRITTEN.load();
@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
     string tfile = "./Traces/mytest.log";/*gql-change-log access*/
     vector<string> v_tfileset{tfile};
     vector<ifstream *> v_tracefile;
-    for (size_t i = 0; i < v_tfileset.size(); i++)
+    for (size_t i = 0; i < v_tfileset.size(); i++)//gql-v_tfileset中含有多个元素的时候-> 处理多文件的读写
     {
         ifstream *file = new ifstream();
         file->open(v_tfileset[i].c_str(), ios::in);
@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
     StorageMod storagemod(&v_stdFiles, &metamod);
     GloStor = &storagemod;
 
-    for (size_t traces = 0; traces < v_tracefile.size(); traces++)
+    for (size_t traces = 0; traces < v_tracefile.size(); traces++)//依次遍历v_tfileset文件列表，进行请求处理
     {
         All_Write_Data.store(0);
         All_Read_Data.store(0);
@@ -251,12 +251,12 @@ int main(int argc, char *argv[])
         Cache_Miss.store(0);
 
         TTest_Item this_citem;
-        uint64_t asize = SSTRIPE_DATASIZE;
+        uint64_t asize = SSTRIPE_DATASIZE;//gql-条带中数据域的大小
 
         printf("Run Trace %s\n", v_tfileset.at(traces).c_str());
         vector<bool> trace_iodir;
         vector<uint64_t> trace_off;
-        vector<uint64_t> trace_len;
+        vector<uint64_t> trace_len;//gql-三个变量代表了用于记录IO操作的方向、偏移量和长度
 
         string line;
         uint64_t lineCount = 0;
@@ -270,8 +270,8 @@ int main(int argc, char *argv[])
             str_split(line, lineSplit, "\t");
             uint64_t offset = atoll(lineSplit[1].c_str());
             uint64_t length = atoll(lineSplit[2].c_str());
-            ol_align(length, offset, BLK_SIZE);
-            if (lineSplit[0] == "W" && length > asize)
+            ol_align(length, offset, BLK_SIZE);//gql-将length和offset都对齐到4kb的整数倍
+            if (lineSplit[0] == "W" && length > asize)//gql-写的话如果长度>一个条带，就保证条带对齐写，偏移量+长度都对齐到条带大小的整数倍
             {
                 ol_align(length, offset, asize);
             }
@@ -301,7 +301,7 @@ int main(int argc, char *argv[])
                                     &trace_iodir,
                                     &trace_off,
                                     &trace_len,
-                                    // iodir_itr,
+                                    // iodir_itr,//不用iodir_itr的原因？？？
                                     // off_itr,
                                     // len_itr,
                                     (trace_iodir.size() / G_NUM_WORKERS));

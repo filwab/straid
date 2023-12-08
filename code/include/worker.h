@@ -104,7 +104,7 @@ void *thread_worker(void *worker_info)
                 char *buf_start = workload_buf + last_buf_start;
 
                 uint64_t offset = 0;
-                if (info->is_rand)
+                if (info->is_rand)//gql-随机或者顺序写设置(使用SeqW_Offset保证顺序 
                 {
                     offset = Rand_offset_align(base_offset, DATASET_SIZE, iosize);
                 }

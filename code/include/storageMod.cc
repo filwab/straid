@@ -206,7 +206,7 @@ void StorageMod::split_stripe_aligned(UIO_Info *uio, vector<UIO_Info *> *uios_ou
 
     int start_stripeid = 0;
     int end_stripeid = 0;
-    user2dev(uio->user_offset, NULL, &start_stripeid);
+    user2dev(uio->user_offset, NULL, &start_stripeid);//gql-获取请求的起始stripe id和结束stripe id
     user2dev(uio->user_offset + uio->length - 1, NULL, &end_stripeid);
 
     for (int i = start_stripeid; i <= end_stripeid; i++)

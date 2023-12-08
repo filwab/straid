@@ -22,13 +22,14 @@ uint64_t SDecodeMod::s_norRead(int thread_id, vector<DIO_Info> v_dios)
         return 0;
     }
     uint64_t total_read_size = 0;
+    printf("Read STD | dio.size%zu,\n",  v_dios.size());
     for (size_t ios = 0; ios < v_dios.size(); ios++)
     {
         DIO_Info dio = v_dios.at(ios);
 
         DevFile *destdev = v_stdfiles->at(dio.dev_id);
         int fd = destdev->file_fd;
-        // printf("Read STD | threadID:%d, fd:%d, devoff:%ld, len:%ld\n", thread_id, fd, dio.dev_offset, dio.length);
+        printf("Read STD | threadID:%d, deviceID:%d, devoff:%ldkb, len:%ldkb\n", thread_id, dio.dev_id, dio.dev_offset/1024, dio.length/1024);
         iouring_rprep(&stdring[thread_id], fd, dio.buf, dio.dev_offset, dio.length);
         total_read_size += dio.length;
     }

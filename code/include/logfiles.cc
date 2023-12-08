@@ -31,7 +31,7 @@ uint64_t user2dev(uint64_t user_offset, int *devid, int *stripeid)
         *stripeid = stripe_num;
     }
 
-    int dev_pos = stripe_num % NUM_DEVFILES + remain_chunk;
+    int dev_pos = stripe_num % NUM_DEVFILES + remain_chunk;//模拟raid-chunk旋转放置数据阵列
     if (dev_pos >= NUM_DEVFILES)
     {
         dev_pos -= NUM_DEVFILES;

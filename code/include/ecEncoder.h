@@ -84,7 +84,7 @@ public:
     }
 
     bool do_part_encode(vector<char *> oridatabufs, vector<char *> newdatabufs, vector<char *> paritybufs,
-                        vector<uint64_t> offsets, vector<uint64_t> lengths)
+                        vector<uint64_t> offsets, vector<uint64_t> lengths)//gql-部分块数据更新校验计算，后续看encode->do..代码时详细了解。(在处理部分条带写的时候会用到)
     {
         assert(oridatabufs.size() == newdatabufs.size());
         size_t chunknums = offsets.size();
