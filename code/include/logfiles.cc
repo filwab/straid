@@ -3,7 +3,7 @@
 
 #include "logfiles.h"
 
-uint64_t user2stripe(uint64_t user_offset)
+uint64_t user2stripe(uint64_t user_offset)////计算该起始偏移定位在哪个条带上
 {
     return user_offset / SCHUNK_SIZE / DATACHUNK_NUM;
 }

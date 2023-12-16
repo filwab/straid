@@ -82,6 +82,7 @@ bool SEncodeMod::encode_partialstripe(int tid, vector<DIO_Info> v_dios)
     uint64_t pchunk_soff = INT_MAX;
     uint64_t pchunk_slen = 0;
 
+    //获取相关元数据控制模块
     auto paritycache = &GloMeta->StdRAID_meta->cache_mod;
     auto queue = &GloStor->v_batchque2.at(tid);
     auto batchque_len = &GloStor->v_batchque.at(tid)->inqueue_data_len;
@@ -90,7 +91,7 @@ bool SEncodeMod::encode_partialstripe(int tid, vector<DIO_Info> v_dios)
     int stripeid = devoff2stripe(v_dios[0].dev_offset);
     uint64_t start_devoff = stripe2devoff(stripeid, 0);
 
-    uint64_t vios_len = 0;
+    uint64_t vios_len = 0; //所有I/O请求的总长度
     for (size_t i = 0; i < v_dios.size(); i++)
     {
         pchunk_soff = min(pchunk_soff, v_dios.at(i).dev_offset);
@@ -130,11 +131,13 @@ bool SEncodeMod::encode_partialstripe(int tid, vector<DIO_Info> v_dios)
     }
     uint64_t rret = io_uring_submit(&stdring[tid]);
     iouring_wait(&stdring[tid], rret);
+    //至此，已知我们要写的新数据，在v_dios[].buf中，还有从底层设备上读取上来的校验数据【存储在各线程的enparitybuf中】和(部分写请求对应的)设备上的“旧数据”【存储在各线程的olddatabuf中】
+    //Gtodo: 此处会产生校验数据的读取请求，后续做标志的时候需要注意此处read request的标志内容。
 
     // Frozen
     SSTEntry *ssentry;
     SST->search_SST(stripeid, ssentry);
-    ssentry->is_frozen.store(true);
+    ssentry->is_frozen.store(true);//表示SSTEntry是否被冻结（即不可更改或正在被处理）的标志？
 
     vector<DIO_Info> bat_dios;
     uint qlen = batchque_len->load();
@@ -171,7 +174,7 @@ bool SEncodeMod::encode_partialstripe(int tid, vector<DIO_Info> v_dios)
         batch_iolen += bat_dios[i].length;
     }
 
-    if (batch_iolen > ((SCHUNK_SIZE * DATACHUNK_NUM - vios_len) >> 1))
+    if (batch_iolen > ((SCHUNK_SIZE * DATACHUNK_NUM - vios_len) >> 1))//!原本注释-加一个RCW读取剩余块的算法？
     {
         vector<DIO_Info> re_dios;
         vector<int> index;

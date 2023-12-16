@@ -314,7 +314,7 @@ uint64_t StorageMod::raid_write(UIO_Info uio)
     assert(length > 0);
 
     vector<UIO_Info *> v_stdblks;
-    split_block(&uio, &v_stdblks);
+    split_block(&uio, &v_stdblks);//切分成块大小请求，更新位图
     for (size_t i = 0; i < v_stdblks.size(); i++)
     {
         meta_mod->blk_bitmap->reset(v_stdblks[i]->user_offset / BLK_SIZE);
@@ -445,12 +445,12 @@ uint64_t StorageMod::raid_write_direct(UIO_Info uio)
     uint64_t worker_id = uio.user_id;
 
     vector<UIO_Info *> v_suios;
-    split_stripe_aligned(&uio, &v_suios);
+    split_stripe_aligned(&uio, &v_suios);//将UIO按照大小切分成不同条带上的UIO请求
     assert(v_suios.size() > 0);
 
     for (size_t ck = 0; ck < v_suios.size(); ck++)
     {
-        int stripeid = user2stripe(uio.user_offset);
+        int stripeid = user2stripe(uio.user_offset);//计算该偏移在的条带id
         auto SST = &this->meta_mod->StdRAID_meta->sstable_mod;
         SSTEntry *sse = NULL;
         SST->search_SST(stripeid, sse);
