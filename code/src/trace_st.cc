@@ -29,6 +29,7 @@
 using namespace std;
 
 extern vector<uint64_t> IO_LatArray[];
+extern vector<uint64_t> ReadIO_LatArray[];//gql-add
 
 extern atomic_uint64_t All_Write_Data;
 extern atomic_uint64_t All_Read_Data;
@@ -61,6 +62,7 @@ struct TTest_Item
     vector<uint64_t> WBand_persec;
 
     vector<uint64_t> all_IOLat_list;
+    vector<uint64_t> read_IOLat_list;//gql-所有线程read请求的延迟列表
 };
 
 void worker_run(int thread_id,
@@ -113,6 +115,8 @@ void worker_run(int thread_id,
             UIO_Info iometa(thread_id, false, buf, offset, length);
             storagemod->raid_read(iometa);
             G_DATA_READ.fetch_add(length);
+            double rtime = toc(10 + thread_id);
+            ReadIO_LatArray[thread_id].emplace_back(rtime);//记录读请求的延迟
         }
         else
         {
@@ -152,6 +156,8 @@ void collector_run(TTest_Item *citem)
 
     vector<uint64_t> *temp = merge_IOLat(G_NUM_WORKERS);//gql-将多个线程的延迟数据合并成一个排序后的vector
     citem->all_IOLat_list.insert(citem->all_IOLat_list.end(), temp->begin(), temp->end());
+    vector<uint64_t> *rtemp = merge_ReadIOLat(G_NUM_WORKERS);//gql-将多个线程的读请求延迟数据合并成一个排序后的vector
+    citem->read_IOLat_list.insert(citem->read_IOLat_list.end(), rtemp->begin(), rtemp->end());
 
     citem->all_data_written = G_DATA_WRITTEN.load();
     citem->all_data_read = G_DATA_READ.load();
@@ -178,6 +184,7 @@ int main(int argc, char *argv[])
 
     // Trace Files
     printf("Open Trace Files\n");
+    // string tfile = "./Traces/fileserver_1.log";/*gql-change-log access*/
     string tfile = "./Traces/mytest.log";/*gql-change-log access*/
     vector<string> v_tfileset{tfile};
     vector<ifstream *> v_tracefile;
@@ -354,6 +361,15 @@ int main(int argc, char *argv[])
             outfile << this_citem.all_IOLat_list.at(pos) << "\t";
         }
         outfile << endl;
+
+        outfile << "Read Latancy CDF: " << endl;//gql-add
+        for (size_t i = 0; i < 1000; i++)
+        {
+            float percent = (float)(i * 0.001);
+            uint64_t pos = percent * this_citem.read_IOLat_list.size();
+            outfile << this_citem.read_IOLat_list.at(pos) << "\t";
+        }
+        outfile << endl;
         outfile << endl;
 
         G_DATA_WRITTEN.store(0);
@@ -362,6 +378,7 @@ int main(int argc, char *argv[])
         for (size_t i = 0; i < G_NUM_WORKERS; i++)
         {
             IO_LatArray[i].clear();
+            ReadIO_LatArray[i].clear();//gql-add
         }
         Collector_endflag = false;
 

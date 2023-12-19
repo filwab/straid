@@ -115,7 +115,7 @@ bool SEncodeMod::encode_partialstripe(int tid, vector<DIO_Info> v_dios)
             uint64_t rlen = pchunk_slen;
             DevFile *destdev = v_stdfiles->at(stripe2paritypos(stripeid));
             int fd = destdev->file_fd;
-            iouring_rprep(&stdring[tid], fd, readbuf, roffset, rlen);
+            iouring_rprep(&stdring[tid], fd, readbuf, roffset, rlen,NVME_RECON_SIG);
             // printf("Parity Read: datapos:%d  devoff:%ld, len:%ld\n", stripe2paritypos(stripeid), roffset, rlen);
         }
     }
@@ -127,7 +127,7 @@ bool SEncodeMod::encode_partialstripe(int tid, vector<DIO_Info> v_dios)
         uint64_t rlen = v_dios[i].length;
         DevFile *destdev = v_stdfiles->at(v_dios[i].dev_id);
         int fd = destdev->file_fd;
-        iouring_rprep(&stdring[tid], fd, readbuf, roffset, rlen);
+        iouring_rprep(&stdring[tid], fd, readbuf, roffset, rlen,NVME_RECON_SIG);
     }
     uint64_t rret = io_uring_submit(&stdring[tid]);
     iouring_wait(&stdring[tid], rret);
@@ -200,7 +200,7 @@ bool SEncodeMod::encode_partialstripe(int tid, vector<DIO_Info> v_dios)
             uint64_t rlen = re_dios[i].length;
             DevFile *destdev = v_stdfiles->at(re_dios[i].dev_id);
             int fd = destdev->file_fd;
-            iouring_rprep(&stdring[tid], fd, readbuf, roffset, rlen);
+            iouring_rprep(&stdring[tid], fd, readbuf, roffset, rlen,NVME_RECON_SIG);
         }
         rret = io_uring_submit(&stdring[tid]);
         iouring_wait(&stdring[tid], rret);
@@ -217,7 +217,7 @@ bool SEncodeMod::encode_partialstripe(int tid, vector<DIO_Info> v_dios)
             uint64_t rlen = bat_dios[i].length;
             DevFile *destdev = v_stdfiles->at(bat_dios[i].dev_id);
             int fd = destdev->file_fd;
-            iouring_rprep(&stdring[tid], fd, readbuf, roffset, rlen);
+            iouring_rprep(&stdring[tid], fd, readbuf, roffset, rlen,NVME_RECON_SIG);
         }
         rret = io_uring_submit(&stdring[tid]);
         iouring_wait(&stdring[tid], rret);

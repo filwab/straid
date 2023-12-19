@@ -26,7 +26,7 @@ using namespace std;
 #define NUM_DEVFILES (DATACHUNK_NUM + PARITYCHUNK_NUM) 
 #define NUM_WORKERS NUM_THREADS                        // Number of RAID worker threads
 
-#define NUM_THREADS (8)
+#define NUM_THREADS (16)
 #define DATASET_SIZE (1 * GB)
 #define LOOP (1) // workload loop num
 #define USER_SPACE_LEN (50 * GB)
@@ -50,6 +50,11 @@ using namespace std;
 typedef unsigned char u8;
 #define MMAX 64
 #define KMAX 64
+
+/*gql-:for GC Rotating */
+#define NVME_RECON_SIG  (1024) //gql-RECONSITUTE SIGNAL
+#define NVME_FAILED_REQ  (408) //gql-failed request code
+#define NVME_FFAIL_SIG (911)  //gql-启用fast-fail机制
 
 struct UIO_Info;
 struct DIO_Info;

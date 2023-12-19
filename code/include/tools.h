@@ -33,6 +33,7 @@ void lat_tic(int i);
 uint64_t lat_toc(int i);
 
 vector<uint64_t> *merge_IOLat(int thread_count);
+vector<uint64_t> *merge_ReadIOLat(int thread_count);//gql-add
 vector<uint64_t> *show_IOLat(int thread_count);
 void clear_IOLat();
 
@@ -47,7 +48,7 @@ void ol_align(uint64_t &length, uint64_t &offset, uint64_t align);
 
 // io_uring
 void iouring_wprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length);
-void iouring_rprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length);
+void iouring_rprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length, uint64_t req_flag);
 uint64_t iouring_wsubmit(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length);
 uint64_t iouring_rsubmit(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length);
 bool iouring_wait(io_uring *ring, uint wait_count);

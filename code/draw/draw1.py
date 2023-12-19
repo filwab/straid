@@ -52,17 +52,17 @@ plt.savefig(os.path.join(os.getcwd(), tfile[-20:-18] +'_bandwidth.png'))
 plt.close()
 
 
-# 绘制尾延迟分布图  有bug目前，暂待修改
-x = [i / 1000.0 for i in range(1, 1001)]
-y = latency_data
-fig, ax = plt.subplots(figsize=(8, 6))
+# # 绘制尾延迟分布图  有bug目前，暂待修改
+# x = [i / 1000.0 for i in range(1, 1001)]
+# y = latency_data
+# fig, ax = plt.subplots(figsize=(8, 6))
 
-plt.plot(x, y, linewidth=2)
-plt.xscale('log')
-plt.xlabel('Tail Latency (s)')
-plt.ylabel('CDF')
-plt.title('Latency CDF')
+# plt.plot(x, y, linewidth=2)
+# plt.xscale('log')
+# plt.xlabel('Tail Latency (s)')
+# plt.ylabel('CDF')
+# plt.title('Latency CDF')
 
-plt.tight_layout()
-plt.savefig(os.path.join(os.getcwd(), tfile[-20:-18] +'_latency.png'))
-plt.close()
+# plt.tight_layout()
+# plt.savefig(os.path.join(os.getcwd(), tfile[-20:-18] +'_latency.png'))
+# plt.close()

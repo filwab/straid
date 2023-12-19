@@ -15,6 +15,7 @@ atomic_bool proc_end_flag(false);
 struct timespec s_latency_clock[100];
 struct timespec e_latency_clock[100];
 vector<uint64_t> IO_LatArray[100];
+vector<uint64_t> ReadIO_LatArray[100];//gql- read io latency
 vector<uint64_t> Wait_LatArray[100];
 vector<uint64_t> Cachesearch_LatArray[100];
 vector<uint64_t> Parityread_LatArray[100];
@@ -32,6 +33,9 @@ atomic_uint64_t Batch_Count(0);
 atomic_uint64_t Block_Count(0);
 atomic_uint64_t Cache_Hit(0);
 atomic_uint64_t Cache_Miss(0);
+
+/*异步请求下标识每个读请求的id，便与处理其返回结果和重构*/
+atomic_uint32_t read_req_id(0);
 
 bool isBadPtr(void *p)
 {
@@ -136,6 +140,17 @@ vector<uint64_t> *merge_IOLat(int thread_count)
     return v_sum;
 }
 
+vector<uint64_t> *merge_ReadIOLat(int thread_count)
+{
+    vector<uint64_t> *v_rsum = new vector<uint64_t>();
+    for (size_t i = 0; i < thread_count; i++)
+    {
+        v_rsum->insert(v_rsum->end(), ReadIO_LatArray[i].begin(), ReadIO_LatArray[i].end());
+    }
+    sort(v_rsum->begin(), v_rsum->end());
+    return v_rsum;
+}
+
 vector<uint64_t> *show_IOLat(int thread_count)
 {
     vector<uint64_t> *v_sum = merge_IOLat(thread_count);
@@ -230,7 +245,8 @@ void iouring_wprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t
     io_uring_prep_writev(sqe, fd, iov, 1, dev_off);
 }
 
-void iouring_rprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length)
+void iouring_rprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length, uint64_t req_flag)
+
 {
     All_Read_Data.fetch_add(length);
     io_uring_sqe *sqe = NULL;
@@ -239,9 +255,8 @@ void iouring_rprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t
     iov->iov_base = buf;
     iov->iov_len = length;
     io_uring_prep_readv(sqe, fd, iov, 1, dev_off);
-    sqe->user_data = 1024;
-    sqe->usr_flag = 1024;
-    // printf("Read STD | usr_flag:%llu, user_data:%llu, personality:%hu\n", sqe->usr_flag, sqe->user_data,sqe->personality);
+    sqe->usr_flag = req_flag;
+    // printf("Read STD | usr_flag:%llu, user_data:%llu\n", sqe->usr_flag, sqe->user_data);
 }
 
 uint64_t iouring_wsubmit(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length)
