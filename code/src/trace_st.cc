@@ -375,18 +375,18 @@ int main(int argc, char *argv[])
         outfile << endl;
 
         outfile << "Latancy CDF: " << endl;
-        for (size_t i = 0; i < 5000; i++)
+        for (size_t i = 0; i < 2000; i++)
         {
-            float percent = (float)(i * 0.001);
+            float percent = (float)(i * 0.0005);
             uint64_t pos = percent * this_citem.all_IOLat_list.size();
             outfile << this_citem.all_IOLat_list.at(pos) << "\t";
         }
         outfile << endl;
 
         outfile << "Read Latancy CDF: " << endl;//gql-add
-        for (size_t i = 0; i < 5000; i++)
+        for (size_t i = 0; i < 2000; i++)
         {
-            float percent = (float)(i * 0.0002);
+            float percent = (float)(i * 0.0005);
             uint64_t pos = percent * this_citem.read_IOLat_list.size();
             outfile << this_citem.read_IOLat_list.at(pos) << "\t";
         }
