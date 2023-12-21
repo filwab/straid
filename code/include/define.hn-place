@@ -26,7 +26,7 @@ using namespace std;
 #define NUM_DEVFILES (DATACHUNK_NUM + PARITYCHUNK_NUM) 
 #define NUM_WORKERS NUM_THREADS                        // Number of RAID worker threads
 
-#define NUM_THREADS (16)
+#define NUM_THREADS (32)
 #define DATASET_SIZE (1 * GB)
 #define LOOP (1) // workload loop num
 #define USER_SPACE_LEN (50 * GB)
@@ -79,5 +79,8 @@ typedef vector<UserQueue *> V_UserQue;
 typedef vector<io_uring *> V_UserRing;
 typedef vector<DevQueue *> V_DevQue;
 typedef vector<DevFile *> V_DevFiles;
+
+typedef  vector<pair<uint64_t, uint64_t>> V_2uint;//gql-:for cqe handle
+typedef  vector<uint64_t> V_uint;
 
 #endif

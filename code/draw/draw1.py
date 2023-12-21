@@ -48,7 +48,7 @@ axs[2].set_xlabel('Time (s)')
 axs[2].set_ylabel('IOPS')
 
 plt.tight_layout()
-plt.savefig(os.path.join(os.getcwd(), tfile[-20:-18] +'_bandwidth.png'))
+plt.savefig(os.path.join(os.getcwd(), tfile[-20:-18] +'_ioda_bandwidth2.png'))
 plt.close()
 
 

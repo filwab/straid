@@ -184,8 +184,8 @@ int main(int argc, char *argv[])
 
     // Trace Files
     printf("Open Trace Files\n");
-    // string tfile = "./Traces/fileserver_1.log";/*gql-change-log access*/
-    string tfile = "./Traces/mytest.log";/*gql-change-log access*/
+    string tfile = "./Traces/fileserver_1.log";/*gql-change-log access*/
+    // string tfile = "./Traces/mytest.log";/*Gtodo:gql-change-log access*/
     vector<string> v_tfileset{tfile};
     vector<ifstream *> v_tracefile;
     for (size_t i = 0; i < v_tfileset.size(); i++)//gql-v_tfileset中含有多个元素的时候-> 处理多文件的读写

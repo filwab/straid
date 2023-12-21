@@ -23,6 +23,9 @@
 
 using namespace std;
 
+//for resonstruct failed read req
+
+
 class SDecodeMod
 {
 public:
@@ -97,6 +100,9 @@ public:
 
     uint64_t s_norRead(int thread_id, vector<DIO_Info> v_uios);
     uint64_t s_degRead(int thread_id, vector<char *> *vdatabuf, vector<uint64_t> *vdataoff, vector<int> *vdatapos, vector<uint64_t> *vdatalen);
+    int get_id(vector<DIO_Info> * v_dios, uint64_t req_id);
+    bool reconstruct_dio(int thread_id, DIO_Info dio);
+    bool encode_dio(vector<char *> databufs,char * origin,int len);
 };
 
 #endif

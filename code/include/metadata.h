@@ -38,12 +38,18 @@ struct DIO_Info
     char *buf;
     uint64_t dev_offset;
     uint64_t length;
+    
+    uint64_t req_id;
+
 
     DIO_Info()
-        : dev_id(-1), buf(NULL), dev_offset(0), length(0){};
+        : dev_id(-1), buf(NULL), dev_offset(0), length(0),req_id(0){};
 
     DIO_Info(int devid, char *ptr, uint64_t offset, uint64_t length)
-        : dev_id(devid), buf(ptr), dev_offset(offset), length(length){};
+        : dev_id(devid), buf(ptr), dev_offset(offset), length(length),req_id(0){};
+
+    DIO_Info(int devid, char *ptr, uint64_t offset, uint64_t length, uint64_t reqid)
+        : dev_id(devid), buf(ptr), dev_offset(offset), length(length), req_id(reqid){};    
 };
 
 /**
@@ -69,6 +75,18 @@ struct UIO_Info
         int devid = 0;
         uint64_t dev_off = user2dev(user_offset, &devid, NULL);
         DIO_Info dio(devid, buf, dev_off, length);
+        assert(dio.dev_id < NUM_DEV);
+        assert(dio.buf != NULL);
+        assert(dio.dev_offset >= 0 && dio.dev_offset < USER_SPACE_LEN);
+        assert(dio.length >= 0);
+        return dio;
+    };
+
+    DIO_Info s_uio2id_dio(uint64_t req_id)
+    {
+        int devid = 0;
+        uint64_t dev_off = user2dev(user_offset, &devid, NULL);
+        DIO_Info dio(devid, buf, dev_off, length,req_id);
         assert(dio.dev_id < NUM_DEV);
         assert(dio.buf != NULL);
         assert(dio.dev_offset >= 0 && dio.dev_offset < USER_SPACE_LEN);

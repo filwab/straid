@@ -34,6 +34,7 @@ atomic_uint64_t Block_Count(0);
 atomic_uint64_t Cache_Hit(0);
 atomic_uint64_t Cache_Miss(0);
 
+atomic_uint64_t RECONST_REQ_NUM(0);
 /*异步请求下标识每个读请求的id，便与处理其返回结果和重构*/
 atomic_uint32_t read_req_id(0);
 
@@ -256,7 +257,9 @@ void iouring_rprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t
     iov->iov_len = length;
     io_uring_prep_readv(sqe, fd, iov, 1, dev_off);
     sqe->usr_flag = req_flag;
-    // printf("Read STD | usr_flag:%llu, user_data:%llu\n", sqe->usr_flag, sqe->user_data);
+    //uint64_t high=0, low=0;
+    //u64_dev(sqe->usr_flag, high, low);
+    // printf("Read STD | usr_flag_high32:%lu,usr_flag_low32:%lu,\n", high, low);
 }
 
 uint64_t iouring_wsubmit(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length)
@@ -292,10 +295,56 @@ bool iouring_wait(io_uring *ring, uint wait_count)
     {
         struct io_uring_cqe *cqe;
         io_uring_wait_cqe(ring, &cqe);
-        printf("cqe->user_data:%llu\n", cqe->user_data);
+        // printf("cqe->user_data:%llu\n", cqe->user_data);
         io_uring_cqe_seen(ring, cqe);
     }
     return true;
+}
+bool iouring_rwait(io_uring *ring, uint wait_count,V_uint *retinfo)
+{
+    
+    V_uint *ret = retinfo;
+
+    for (uint i = 0; i < wait_count; i++)
+    {
+        struct io_uring_cqe *cqe;
+        io_uring_wait_cqe(ring, &cqe);
+        // printf("cqe->user_data:%llu\n", cqe->user_data);
+        //如果cqe->user_data后32位为NVME_FAILED_REQ，将user_data前32位和后32位分别取出来
+        uint64_t high=0,low=0;
+        u64_dev(cqe->user_data,high ,low );
+        // printf("cqe->user_data-high32:%lu,cqe->user_data-high32:%lu\n", high, low);
+        if (sget_low32(cqe->user_data) ==  NVME_FAILED_REQ)
+        {
+            if (ret != NULL)
+            {
+                ret->emplace_back(cqe->user_data);
+            }     
+        }
+        io_uring_cqe_seen(ring, cqe);
+    }
+    return true;
+}
+
+void u64_dev(uint64_t origin, uint64_t &high, uint64_t &low)
+{
+    //将origin的高32位和低32位数据提取出来给high和low
+    high = origin >> 32;
+    low = origin & 0xFFFFFFFF;
+}
+uint64_t u64_merg(uint64_t high, uint64_t low)
+{
+    //将high的低32为作为64位变量res的高32位，将low的低32位作为64位变量res的低32位，生成res
+    uint64_t res = (high << 32) | (low & 0xFFFFFFFF);
+    return res;
+}
+uint64_t sget_low32(uint64_t data)
+{
+    return data & 0xFFFFFFFF;
+}
+uint64_t sget_high32(uint64_t data)
+{
+    return data >> 32;
 }
 
 uint64_t o_align(uint64_t offset, uint64_t align)

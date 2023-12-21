@@ -70,7 +70,7 @@ plt.annotate(f'9995: {read_latency_cdf_ms[index_9995]:.2f} ms', xy=(0.9995, read
                 arrowprops=dict(facecolor='red',  arrowstyle='<-'),)
 
 
-plt.savefig(os.path.join(os.getcwd(), 'filsever3_latency.png'))
+plt.savefig(os.path.join(os.getcwd(), 'filsever_ioda_32thre_latency.png'))
 # plt.show()
 
 

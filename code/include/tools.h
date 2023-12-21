@@ -52,5 +52,14 @@ void iouring_rprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t
 uint64_t iouring_wsubmit(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length);
 uint64_t iouring_rsubmit(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length);
 bool iouring_wait(io_uring *ring, uint wait_count);
+bool iouring_rwait(io_uring *ring, uint wait_count,V_uint *retinfo);/*gql-add，wait info of failed read req*/
+
+//for uint64_t calculation
+void u64_dev(uint64_t origin, uint64_t &high, uint64_t &low);
+uint64_t u64_merg(uint64_t high, uint64_t low);
+uint64_t sget_low32(uint64_t data);
+uint64_t sget_high32(uint64_t data);
+
+
 
 #endif

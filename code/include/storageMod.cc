@@ -8,6 +8,8 @@
 extern atomic_uint64_t ring_pending[NUM_THREADS];
 extern atomic_uint64_t Block_Count;
 
+extern atomic_uint64_t read_req_id;
+
 void Func_init(int fd, uint64_t start_offset, uint64_t end_offset, char *buf)
 {
     for (size_t i = start_offset; i < end_offset; i += MB)
@@ -343,7 +345,8 @@ uint64_t StorageMod::raid_read(UIO_Info uio)
     vector<DIO_Info> v_schunks;
     for (size_t chunk_cnt = 0; chunk_cnt < v_chunks.size(); chunk_cnt++)
     {
-        v_schunks.emplace_back(v_chunks[chunk_cnt]->s_uio2dio());
+        uint64_t rid = read_req_id.fetch_add(1);//gql-增加读请求id
+        v_schunks.emplace_back(v_chunks[chunk_cnt]->s_uio2id_dio(rid+1));
     }
     s_decodemod->s_norRead(uio.user_id, v_schunks);
 
