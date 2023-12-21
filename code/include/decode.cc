@@ -12,10 +12,13 @@
 #include "decode.h"
 
 #include "isa-l.h"
+
+#define RECONST_MOD
 // #define DEGRADE
 extern atomic_bool proc_end_flag;
 extern atomic_uint64_t All_Read_Data;
 extern atomic_uint64_t RECONST_REQ_NUM;
+extern atomic_uint64_t TOTAL_READ_NUM;
 uint64_t SDecodeMod::s_norRead(int thread_id, vector<DIO_Info> v_dios)
 {
 #ifndef DEGRADE
@@ -28,16 +31,22 @@ uint64_t SDecodeMod::s_norRead(int thread_id, vector<DIO_Info> v_dios)
     {
         DIO_Info dio = v_dios.at(ios);
         //将dio的req_id赋值为read
+#ifndef RECONST_MOD
+        uint64_t usrdata=NVME_RECON_SIG;
+#else
         uint64_t usrdata=u64_merg(dio.req_id, NVME_FFAIL_SIG);//gql-userdata-gen
-
+#endif
         DevFile *destdev = v_stdfiles->at(dio.dev_id);
         int fd = destdev->file_fd;
         // printf("Read STD | threadID:%d, deviceID:%d, devoff:%ldkb, len:%ldkb\n", thread_id, dio.dev_id, dio.dev_offset/1024, dio.length/1024);
         iouring_rprep(&stdring[thread_id], fd, dio.buf, dio.dev_offset, dio.length,usrdata);
         total_read_size += dio.length;
+        TOTAL_READ_NUM.fetch_add(1);
     }
     uint64_t ret = io_uring_submit(&stdring[thread_id]);
-    // iouring_wait(&stdring[thread_id], ret);
+#ifndef RECONST_MOD
+    iouring_wait(&stdring[thread_id], ret);
+#else
     V_uint *retcqes = new V_uint();
     iouring_rwait(&stdring[thread_id], ret, retcqes);
     //循环遍历retcqe，将失败的读请求重新放入dio中
@@ -58,6 +67,7 @@ uint64_t SDecodeMod::s_norRead(int thread_id, vector<DIO_Info> v_dios)
         // RECONST_REQ_NUM.fetch_add(1);
         reconstruct_dio(thread_id,v_dios.at(vid));
     }
+#endif  
 
 #else
 

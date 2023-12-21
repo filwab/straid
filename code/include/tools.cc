@@ -35,6 +35,7 @@ atomic_uint64_t Cache_Hit(0);
 atomic_uint64_t Cache_Miss(0);
 
 atomic_uint64_t RECONST_REQ_NUM(0);
+atomic_uint64_t TOTAL_READ_NUM(0);
 /*异步请求下标识每个读请求的id，便与处理其返回结果和重构*/
 atomic_uint32_t read_req_id(0);
 
@@ -200,6 +201,17 @@ pair<float, float> print_throughtput(long long data_length, int io_count, double
     return make_pair(float(data_length / past_time), float(io_count / past_time));
 }
 
+void my_print(const char *info, long int  rec_read,long int total_read)
+{
+    printf("[%s] | "
+           "reconstrcut read num: %ld | "
+           "total read num: %ld | "
+           "\n",
+           info,
+           rec_read,
+           total_read);
+}
+
 int DropCaches(int drop)
 {
     int ret = 0;
@@ -257,9 +269,6 @@ void iouring_rprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t
     iov->iov_len = length;
     io_uring_prep_readv(sqe, fd, iov, 1, dev_off);
     sqe->usr_flag = req_flag;
-    //uint64_t high=0, low=0;
-    //u64_dev(sqe->usr_flag, high, low);
-    // printf("Read STD | usr_flag_high32:%lu,usr_flag_low32:%lu,\n", high, low);
 }
 
 uint64_t iouring_wsubmit(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length)

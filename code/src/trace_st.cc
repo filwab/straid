@@ -37,6 +37,9 @@ extern atomic_uint64_t All_Read_Data;
 extern atomic_uint64_t Cache_Hit;
 extern atomic_uint64_t Cache_Miss;
 
+extern atomic_uint64_t RECONST_REQ_NUM;
+extern atomic_uint64_t TOTAL_READ_NUM;
+
 const int G_NUM_WORKERS = NUM_THREADS;
 
 atomic_uint64_t iodir_cnt(0);
@@ -60,6 +63,7 @@ struct TTest_Item
     vector<uint64_t> IOPS_persec;
     vector<uint64_t> Band_persec;
     vector<uint64_t> WBand_persec;
+    vector<uint64_t> RBand_persec;
 
     vector<uint64_t> all_IOLat_list;
     vector<uint64_t> read_IOLat_list;//gql-所有线程read请求的延迟列表
@@ -144,6 +148,7 @@ void collector_run(TTest_Item *citem)
         uint64_t now_iocnt = G_IOCOUNT.load();
 
         citem->WBand_persec.emplace_back(now_written - last_written);
+        citem->RBand_persec.emplace_back(now_read - last_read);
         citem->Band_persec.emplace_back(now_written + now_read - last_written - last_read);
         citem->IOPS_persec.emplace_back(now_iocnt - last_iocnt);
 
@@ -256,6 +261,8 @@ int main(int argc, char *argv[])
         All_Read_Data.store(0);
         Cache_Hit.store(0);
         Cache_Miss.store(0);
+        RECONST_REQ_NUM.store(0);
+        TOTAL_READ_NUM.store(0);
 
         TTest_Item this_citem;
         uint64_t asize = SSTRIPE_DATASIZE;//gql-条带中数据域的大小
@@ -324,7 +331,12 @@ int main(int argc, char *argv[])
         collector_tid.join();
 
         double timer = toc(0);
-        print_throughtput(0, trace_off.size(), timer, v_tfileset.at(traces).c_str());
+
+        //Gtodo:以下代码为打印输出
+        print_throughtput(this_citem.all_data_read+this_citem.all_data_written, trace_off.size(), timer, v_tfileset.at(traces).c_str());
+        uint64_t rec_read = RECONST_REQ_NUM.load();
+        uint64_t tt_read = TOTAL_READ_NUM.load();
+        my_print(v_tfileset.at(traces).c_str(), rec_read, tt_read);
 
         printf("Printing Results\n");
         outfile << v_tfileset.at(traces) << endl;
@@ -345,6 +357,15 @@ int main(int argc, char *argv[])
         }
         outfile << endl;
 
+        outfile << "READ Band Persec: "
+                << endl;
+        for (size_t i = 0; i < this_citem.RBand_persec.size() / 1; i++)
+        {
+            outfile << this_citem.RBand_persec.at(i) / 1024 / 1024 << "\t";
+        }
+        outfile << endl;
+
+
         outfile << "IOPS Persec: "
                 << endl;
         for (size_t i = 0; i < this_citem.IOPS_persec.size() / 1; i++)
@@ -354,7 +375,7 @@ int main(int argc, char *argv[])
         outfile << endl;
 
         outfile << "Latancy CDF: " << endl;
-        for (size_t i = 0; i < 1000; i++)
+        for (size_t i = 0; i < 5000; i++)
         {
             float percent = (float)(i * 0.001);
             uint64_t pos = percent * this_citem.all_IOLat_list.size();
@@ -363,9 +384,9 @@ int main(int argc, char *argv[])
         outfile << endl;
 
         outfile << "Read Latancy CDF: " << endl;//gql-add
-        for (size_t i = 0; i < 1000; i++)
+        for (size_t i = 0; i < 5000; i++)
         {
-            float percent = (float)(i * 0.001);
+            float percent = (float)(i * 0.0002);
             uint64_t pos = percent * this_citem.read_IOLat_list.size();
             outfile << this_citem.read_IOLat_list.at(pos) << "\t";
         }
