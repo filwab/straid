@@ -28,6 +28,7 @@ using namespace std;
 
 #define NUM_THREADS (32)
 #define DATASET_SIZE (1 * GB)
+#define WARM_SPACE_LEN (16 * GB)
 #define LOOP (1) // workload loop num
 #define USER_SPACE_LEN (50 * GB)
 // #define IO_SIZE (64 * KB) 

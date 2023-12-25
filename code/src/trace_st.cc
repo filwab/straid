@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
     }
 
     ofstream outfile;
-    outfile.open("./results/ST_trace_results.txt", ios::out | ios::app);
+    outfile.open("./results/ST_Origin_trace_results.txt", ios::out | ios::app);
     if (!outfile.is_open())
     {
         cout << "outfile open error" << endl;

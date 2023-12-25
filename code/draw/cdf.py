@@ -4,7 +4,7 @@ import os
 import numpy as np
 
 path_md = '../results/MD_trace_results.txt'
-path_st = '/home/femu/StRAID/straid/code/results/ST_trace_results.txt'
+path_st = '/home/femu/StRAID/straid/code/results/compare.txt'
 path_out = '~/StRAID/straid/code/draw/'
 
 tfile = path_st
@@ -28,17 +28,20 @@ with open( tfile , 'r') as f:
             iops_data = [int(x) for x in next(f).strip().split()]
         elif line.startswith('Latancy'):
             latency_data = [int(x) for x in next(f).strip().split()]
+        elif line.startswith('IODA Read Latancy'):
+            ioda_latency_data = [int(x) for x in next(f).strip().split()]
         elif line.startswith('Read Latancy CDF'):
             read_latency_data = [int(x) for x in next(f).strip().split()]
         else:
             continue
 
 # 将纵坐标转换为毫秒（ms）单位
-latency_cdf_ms = np.array(latency_data) / 1e6  # 从纳秒转换为毫秒
+# latency_cdf_ms = np.array(latency_data) / 1e6  # 从纳秒转换为毫秒
+ioda_latency_data_ms = np.array(ioda_latency_data) / 1e6 
 read_latency_cdf_ms = np.array(read_latency_data) / 1e6
 
 # 生成百分位数
-percentiles = np.linspace(0, 1, len(latency_cdf_ms))
+percentiles = np.linspace(0, 1, len(ioda_latency_data_ms))
 
 # 找到90%的索引位置
 index_90 = int(0.9 * len(percentiles))
@@ -51,8 +54,9 @@ index_9995 = int(0.9995 * len(percentiles))
 # 绘制平滑曲线
 plt.figure(figsize=(12, 6))
 
-plt.plot(percentiles[index_90:], latency_cdf_ms[index_90:], label='Latency CDF', linestyle='-', linewidth=2)
-plt.plot(percentiles[index_90:len(read_latency_cdf_ms)], read_latency_cdf_ms[index_90:], label='Read Latency CDF', linestyle='-', linewidth=2)
+# plt.plot(percentiles[index_90:], latency_cdf_ms[index_90:], label='Latency CDF', linestyle='-', linewidth=2)
+plt.plot(percentiles[index_90:], ioda_latency_data_ms[index_90:], label='IODA Latency CDF', linestyle='-', linewidth=2)
+plt.plot(percentiles[index_90:len(read_latency_cdf_ms)], read_latency_cdf_ms[index_90:], label='Origin Latency CDF', linestyle='-', linewidth=2)
 
 plt.xlim([0.9, 1.0])
 plt.xlabel('Percentile')
@@ -68,9 +72,17 @@ plt.annotate(f'999: {read_latency_cdf_ms[index_999]:.2f} ms', xy=(0.999, read_la
                 arrowprops=dict(facecolor='red',  arrowstyle='<-'),)
 plt.annotate(f'9995: {read_latency_cdf_ms[index_9995]:.2f} ms', xy=(0.9995, read_latency_cdf_ms[index_9995]), xytext=(0.985, read_latency_cdf_ms[index_9995]+4),
                 arrowprops=dict(facecolor='red',  arrowstyle='<-'),)
+#在ioda_latency_data_ms中标注995，999，9995的尾延迟值,用箭头指示，并显示其y值
+plt.annotate(f'995: {ioda_latency_data_ms[index_995]:.2f} ms', xy=(0.995, ioda_latency_data_ms[index_995]), xytext=(0.99, ioda_latency_data_ms[index_995]+4),
+             arrowprops=dict(facecolor='red', arrowstyle='<-'),)
+plt.annotate(f'999: {ioda_latency_data_ms[index_999]:.2f} ms', xy=(0.999, ioda_latency_data_ms[index_999]), xytext=(0.985, ioda_latency_data_ms[index_999]),
+                arrowprops=dict(facecolor='red',  arrowstyle='<-'),)
+plt.annotate(f'9995: {ioda_latency_data_ms[index_9995]:.2f} ms', xy=(0.9995, ioda_latency_data_ms[index_9995]), xytext=(0.985, ioda_latency_data_ms[index_9995]+4),
+                arrowprops=dict(facecolor='red',  arrowstyle='<-'),)
 
 
-plt.savefig(os.path.join(os.getcwd(), 'filsever_ioda_32thre_latency2.png'))
+
+plt.savefig(os.path.join(os.getcwd(), 'compare.png'))
 # plt.show()
 
 

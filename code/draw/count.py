@@ -11,7 +11,7 @@ with open('/home/femu/StRAID/straid/code/Traces/mytest.log') as f:
       types.add(line.split()[-1])   
     elif re.search(r'^W', line):
       w_count += 1
-      types.add(line.split()[-1]) 
+      types.add(line.split()[-1])
 
 print('R line count:', r_count)  
 print('W line count:', w_count)
