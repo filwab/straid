@@ -212,6 +212,31 @@ void my_print(const char *info, long int  rec_read,long int total_read)
            total_read);
 }
 
+void latency_print(const char *info, vector<uint64_t> * read_IOLat)
+{
+    int lenth = read_IOLat->size();
+    int index_99 = lenth * 0.99;
+    int index_995 = lenth * 0.995;
+    int index_999 = lenth * 0.999;
+    int index_9995 = lenth * 0.9995;
+    int index_9999 = lenth * 0.9999;
+    //计算以上尾延迟数据，以ms为单位保留两位小数
+    float result_99 = (float)read_IOLat->at(index_99) / 1000000;
+    float result_995 = (float)read_IOLat->at(index_995) / 1000000;
+    float result_999 = (float)read_IOLat->at(index_999) / 1000000;
+    float result_9995 = (float)read_IOLat->at(index_9995) / 1000000;
+    float result_9999 = (float)read_IOLat->at(index_9999) / 1000000;
+    //计算平均延迟 以ms为单位保留两位小数
+    uint64_t avg_result = SumVector(*read_IOLat) / read_IOLat->size();
+    float avg_result_ms = (float)avg_result / 1000000;
+
+    //打印平均延迟，尾延迟
+    printf("[%s] - read tail latency result :\n", info);
+    printf("Average latency: | 99.0%% latency: | 99.5%% latency: | 99.9%% latency: | 99.95%% latency:\n");
+    printf("%.2f ms | %.2f ms | %.2f ms | %.2f ms | %.2f ms\n", avg_result_ms, result_99, result_995, result_999, result_9995);
+
+}
+
 int DropCaches(int drop)
 {
     int ret = 0;

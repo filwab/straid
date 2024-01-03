@@ -26,6 +26,7 @@ void tic(int i);
 double toc(int i);
 pair<float, float> print_throughtput(long long data_length, int io_count, double past_time, const char *info);
 void my_print(const char *info, long int recs_read,long int total_read);
+void latency_print(const char *info, vector<uint64_t> * read_IOLat);
 
 void ptic(int i);
 uint64_t ptoc(int i);

@@ -9,8 +9,8 @@
             "-I./include/concurrentqueue",
             "-I./include/libcuckoo",
             "-I./src",
-            "-Wp,-MT,obj/metadata.o",
-            "-Wp,-MMD,obj/metadata.o.d",
+            "-Wp,-MT,obj/ecEncoder.o",
+            "-Wp,-MMD,obj/ecEncoder.o.d",
             "-g",
             "-std=c++2a",
             "-Wall",
@@ -20,11 +20,11 @@
             "-Wno-comment",
             "-O3",
             "-o",
-            "obj/metadata.o",
-            "include/metadata.cc"
+            "obj/ecEncoder.o",
+            "include/ecEncoder.cc"
         ],
         "directory": "/home/femu/StRAID/straid/code",
-        "file": "include/metadata.cc"
+        "file": "include/ecEncoder.cc"
     },
     {
         "arguments": [
@@ -63,114 +63,6 @@
             "-I./include/concurrentqueue",
             "-I./include/libcuckoo",
             "-I./src",
-            "-Wp,-MT,obj/cache.o",
-            "-Wp,-MMD,obj/cache.o.d",
-            "-g",
-            "-std=c++2a",
-            "-Wall",
-            "-Wno-unused-variable",
-            "-Wno-unused-but-set-variable",
-            "-Wno-sign-compare",
-            "-Wno-comment",
-            "-O3",
-            "-o",
-            "obj/cache.o",
-            "include/cache.cc"
-        ],
-        "directory": "/home/femu/StRAID/straid/code",
-        "file": "include/cache.cc"
-    },
-    {
-        "arguments": [
-            "g++",
-            "-c",
-            "-I.",
-            "-I./include",
-            "-I./include/Bitmap",
-            "-I./include/concurrentqueue",
-            "-I./include/libcuckoo",
-            "-I./src",
-            "-Wp,-MT,obj/logfiles.o",
-            "-Wp,-MMD,obj/logfiles.o.d",
-            "-g",
-            "-std=c++2a",
-            "-Wall",
-            "-Wno-unused-variable",
-            "-Wno-unused-but-set-variable",
-            "-Wno-sign-compare",
-            "-Wno-comment",
-            "-O3",
-            "-o",
-            "obj/logfiles.o",
-            "include/logfiles.cc"
-        ],
-        "directory": "/home/femu/StRAID/straid/code",
-        "file": "include/logfiles.cc"
-    },
-    {
-        "arguments": [
-            "g++",
-            "-c",
-            "-I.",
-            "-I./include",
-            "-I./include/Bitmap",
-            "-I./include/concurrentqueue",
-            "-I./include/libcuckoo",
-            "-I./src",
-            "-Wp,-MT,obj/tools.o",
-            "-Wp,-MMD,obj/tools.o.d",
-            "-g",
-            "-std=c++2a",
-            "-Wall",
-            "-Wno-unused-variable",
-            "-Wno-unused-but-set-variable",
-            "-Wno-sign-compare",
-            "-Wno-comment",
-            "-O3",
-            "-o",
-            "obj/tools.o",
-            "include/tools.cc"
-        ],
-        "directory": "/home/femu/StRAID/straid/code",
-        "file": "include/tools.cc"
-    },
-    {
-        "arguments": [
-            "g++",
-            "-c",
-            "-I.",
-            "-I./include",
-            "-I./include/Bitmap",
-            "-I./include/concurrentqueue",
-            "-I./include/libcuckoo",
-            "-I./src",
-            "-Wp,-MT,obj/bench.o",
-            "-Wp,-MMD,obj/bench.o.d",
-            "-g",
-            "-std=c++2a",
-            "-Wall",
-            "-Wno-unused-variable",
-            "-Wno-unused-but-set-variable",
-            "-Wno-sign-compare",
-            "-Wno-comment",
-            "-O3",
-            "-o",
-            "obj/bench.o",
-            "src/bench.cc"
-        ],
-        "directory": "/home/femu/StRAID/straid/code",
-        "file": "src/bench.cc"
-    },
-    {
-        "arguments": [
-            "g++",
-            "-c",
-            "-I.",
-            "-I./include",
-            "-I./include/Bitmap",
-            "-I./include/concurrentqueue",
-            "-I./include/libcuckoo",
-            "-I./src",
             "-Wp,-MT,obj/storageMod.o",
             "-Wp,-MMD,obj/storageMod.o.d",
             "-g",
@@ -198,8 +90,8 @@
             "-I./include/concurrentqueue",
             "-I./include/libcuckoo",
             "-I./src",
-            "-Wp,-MT,obj/define.o",
-            "-Wp,-MMD,obj/define.o.d",
+            "-Wp,-MT,obj/main.o",
+            "-Wp,-MMD,obj/main.o.d",
             "-g",
             "-std=c++2a",
             "-Wall",
@@ -209,11 +101,38 @@
             "-Wno-comment",
             "-O3",
             "-o",
-            "obj/define.o",
-            "include/define.cc"
+            "obj/main.o",
+            "src/main.cc"
         ],
         "directory": "/home/femu/StRAID/straid/code",
-        "file": "include/define.cc"
+        "file": "src/main.cc"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-I.",
+            "-I./include",
+            "-I./include/Bitmap",
+            "-I./include/concurrentqueue",
+            "-I./include/libcuckoo",
+            "-I./src",
+            "-Wp,-MT,obj/cache.o",
+            "-Wp,-MMD,obj/cache.o.d",
+            "-g",
+            "-std=c++2a",
+            "-Wall",
+            "-Wno-unused-variable",
+            "-Wno-unused-but-set-variable",
+            "-Wno-sign-compare",
+            "-Wno-comment",
+            "-O3",
+            "-o",
+            "obj/cache.o",
+            "include/cache.cc"
+        ],
+        "directory": "/home/femu/StRAID/straid/code",
+        "file": "include/cache.cc"
     },
     {
         "arguments": [
@@ -252,8 +171,8 @@
             "-I./include/concurrentqueue",
             "-I./include/libcuckoo",
             "-I./src",
-            "-Wp,-MT,obj/trace_md.o",
-            "-Wp,-MMD,obj/trace_md.o.d",
+            "-Wp,-MT,obj/trace_st.o",
+            "-Wp,-MMD,obj/trace_st.o.d",
             "-g",
             "-std=c++2a",
             "-Wall",
@@ -263,38 +182,11 @@
             "-Wno-comment",
             "-O3",
             "-o",
-            "obj/trace_md.o",
-            "src/trace_md.cc"
+            "obj/trace_st.o",
+            "src/trace_st.cc"
         ],
         "directory": "/home/femu/StRAID/straid/code",
-        "file": "src/trace_md.cc"
-    },
-    {
-        "arguments": [
-            "g++",
-            "-c",
-            "-I.",
-            "-I./include",
-            "-I./include/Bitmap",
-            "-I./include/concurrentqueue",
-            "-I./include/libcuckoo",
-            "-I./src",
-            "-Wp,-MT,obj/ecEncoder.o",
-            "-Wp,-MMD,obj/ecEncoder.o.d",
-            "-g",
-            "-std=c++2a",
-            "-Wall",
-            "-Wno-unused-variable",
-            "-Wno-unused-but-set-variable",
-            "-Wno-sign-compare",
-            "-Wno-comment",
-            "-O3",
-            "-o",
-            "obj/ecEncoder.o",
-            "include/ecEncoder.cc"
-        ],
-        "directory": "/home/femu/StRAID/straid/code",
-        "file": "include/ecEncoder.cc"
+        "file": "src/trace_st.cc"
     },
     {
         "arguments": [
@@ -333,8 +225,8 @@
             "-I./include/concurrentqueue",
             "-I./include/libcuckoo",
             "-I./src",
-            "-Wp,-MT,obj/trace_st.o",
-            "-Wp,-MMD,obj/trace_st.o.d",
+            "-Wp,-MT,obj/tools.o",
+            "-Wp,-MMD,obj/tools.o.d",
             "-g",
             "-std=c++2a",
             "-Wall",
@@ -344,11 +236,11 @@
             "-Wno-comment",
             "-O3",
             "-o",
-            "obj/trace_st.o",
-            "src/trace_st.cc"
+            "obj/tools.o",
+            "include/tools.cc"
         ],
         "directory": "/home/femu/StRAID/straid/code",
-        "file": "src/trace_st.cc"
+        "file": "include/tools.cc"
     },
     {
         "arguments": [
@@ -360,8 +252,8 @@
             "-I./include/concurrentqueue",
             "-I./include/libcuckoo",
             "-I./src",
-            "-Wp,-MT,obj/main.o",
-            "-Wp,-MMD,obj/main.o.d",
+            "-Wp,-MT,obj/define.o",
+            "-Wp,-MMD,obj/define.o.d",
             "-g",
             "-std=c++2a",
             "-Wall",
@@ -371,10 +263,118 @@
             "-Wno-comment",
             "-O3",
             "-o",
-            "obj/main.o",
-            "src/main.cc"
+            "obj/define.o",
+            "include/define.cc"
         ],
         "directory": "/home/femu/StRAID/straid/code",
-        "file": "src/main.cc"
+        "file": "include/define.cc"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-I.",
+            "-I./include",
+            "-I./include/Bitmap",
+            "-I./include/concurrentqueue",
+            "-I./include/libcuckoo",
+            "-I./src",
+            "-Wp,-MT,obj/bench.o",
+            "-Wp,-MMD,obj/bench.o.d",
+            "-g",
+            "-std=c++2a",
+            "-Wall",
+            "-Wno-unused-variable",
+            "-Wno-unused-but-set-variable",
+            "-Wno-sign-compare",
+            "-Wno-comment",
+            "-O3",
+            "-o",
+            "obj/bench.o",
+            "src/bench.cc"
+        ],
+        "directory": "/home/femu/StRAID/straid/code",
+        "file": "src/bench.cc"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-I.",
+            "-I./include",
+            "-I./include/Bitmap",
+            "-I./include/concurrentqueue",
+            "-I./include/libcuckoo",
+            "-I./src",
+            "-Wp,-MT,obj/metadata.o",
+            "-Wp,-MMD,obj/metadata.o.d",
+            "-g",
+            "-std=c++2a",
+            "-Wall",
+            "-Wno-unused-variable",
+            "-Wno-unused-but-set-variable",
+            "-Wno-sign-compare",
+            "-Wno-comment",
+            "-O3",
+            "-o",
+            "obj/metadata.o",
+            "include/metadata.cc"
+        ],
+        "directory": "/home/femu/StRAID/straid/code",
+        "file": "include/metadata.cc"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-I.",
+            "-I./include",
+            "-I./include/Bitmap",
+            "-I./include/concurrentqueue",
+            "-I./include/libcuckoo",
+            "-I./src",
+            "-Wp,-MT,obj/trace_md.o",
+            "-Wp,-MMD,obj/trace_md.o.d",
+            "-g",
+            "-std=c++2a",
+            "-Wall",
+            "-Wno-unused-variable",
+            "-Wno-unused-but-set-variable",
+            "-Wno-sign-compare",
+            "-Wno-comment",
+            "-O3",
+            "-o",
+            "obj/trace_md.o",
+            "src/trace_md.cc"
+        ],
+        "directory": "/home/femu/StRAID/straid/code",
+        "file": "src/trace_md.cc"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-I.",
+            "-I./include",
+            "-I./include/Bitmap",
+            "-I./include/concurrentqueue",
+            "-I./include/libcuckoo",
+            "-I./src",
+            "-Wp,-MT,obj/logfiles.o",
+            "-Wp,-MMD,obj/logfiles.o.d",
+            "-g",
+            "-std=c++2a",
+            "-Wall",
+            "-Wno-unused-variable",
+            "-Wno-unused-but-set-variable",
+            "-Wno-sign-compare",
+            "-Wno-comment",
+            "-O3",
+            "-o",
+            "obj/logfiles.o",
+            "include/logfiles.cc"
+        ],
+        "directory": "/home/femu/StRAID/straid/code",
+        "file": "include/logfiles.cc"
     }
 ]

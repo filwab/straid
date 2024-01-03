@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
     }
 
     ofstream outfile;
-    outfile.open("./results/ST_Origin_trace_results.txt", ios::out | ios::app);
+    outfile.open("./results/ST_trace_results.txt", ios::out | ios::app);
     if (!outfile.is_open())
     {
         cout << "outfile open error" << endl;
@@ -337,6 +337,8 @@ int main(int argc, char *argv[])
         uint64_t rec_read = RECONST_REQ_NUM.load();
         uint64_t tt_read = TOTAL_READ_NUM.load();
         my_print(v_tfileset.at(traces).c_str(), rec_read, tt_read);
+        latency_print(v_tfileset.at(traces).c_str(), &this_citem.read_IOLat_list);
+
 
         printf("Printing Results\n");
         outfile << v_tfileset.at(traces) << endl;
@@ -381,6 +383,13 @@ int main(int argc, char *argv[])
             uint64_t pos = percent * this_citem.all_IOLat_list.size();
             outfile << this_citem.all_IOLat_list.at(pos) << "\t";
         }
+        // //calculate latency after 90% requests
+        // for (size_t i = 0; i < 1000; i++)
+        // {
+        //     float percent = 0.9+ (float)(i * 0.0001);
+        //     uint64_t pos = percent * this_citem.all_IOLat_list.size();
+        //     outfile << this_citem.all_IOLat_list.at(pos) << "\t";
+        // }
         outfile << endl;
 
         outfile << "Read Latancy CDF: " << endl;//gql-add
@@ -390,6 +399,13 @@ int main(int argc, char *argv[])
             uint64_t pos = percent * this_citem.read_IOLat_list.size();
             outfile << this_citem.read_IOLat_list.at(pos) << "\t";
         }
+        // //calculate latency after 90% requests
+        // for (size_t i = 0; i < 1000; i++)
+        // {
+        //     float percent = 0.9+ (float)(i * 0.0001);
+        //     uint64_t pos = percent * this_citem.read_IOLat_list.size();
+        //     outfile << this_citem.read_IOLat_list.at(pos) << "\t";
+        // }
         outfile << endl;
         outfile << endl;
 
