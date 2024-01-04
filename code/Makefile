@@ -22,10 +22,10 @@ OBJ_DIR   = ./obj
 BIN_DIR   = ./bin
 EXTRA_SRC = 
 EXCLUDE_FILES = 
-EXCLUDE_OBJS = obj/main.o obj/bench.o obj/trace_md.o obj/trace_st.o
+EXCLUDE_OBJS = obj/main.o obj/bench.o obj/trace_md.o obj/trace_st.o obj/load.o
 SUFFIX       = c cc
 
-TARGET := main bench trace_md trace_st
+TARGET := main bench trace_md trace_st load
 TARGET_TYPE  := app
 
 
