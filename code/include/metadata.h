@@ -144,11 +144,11 @@ struct SSTable
 
     bool search_SST(uint64_t stripeid, SSTEntry *&entry)
     {
+        if (stripeid >= tablehash.size())
+        {
+            cout << stripeid << " " << tablehash.size() << endl;
+        }
         assert(stripeid < tablehash.size());
-        // if (stripeid >= tablehash.size())
-        // {
-        //     cout << stripeid << " " << tablehash.size() << endl;
-        // }
         entry = tablehash.at(stripeid);
         return true;
     }

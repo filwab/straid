@@ -57,16 +57,6 @@ typedef unsigned char u8;
 #define NVME_FAILED_REQ  (408) //gql-failed request code
 #define NVME_FFAIL_SIG (911)  //gql-启用fast-fail机制
 
-/*gql-: for self-config workload*/
-#define WORKLOAD_DATA (4 * GB)
-#define WRITE_RATIO (10/16)
-#define WRITE_IOSIZE (FULLSIZE)
-#define READ_IOSIZE (4 * KB)
-#define IO_COUNT (1000000)
-#define WRITE_DATA (WORKLOAD_DATA * WRITE_RATIO)
-#define READ_DATA (WORKLOAD_DATA - WRITE_DATA)
-
-
 
 struct UIO_Info;
 struct DIO_Info;
