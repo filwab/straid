@@ -232,6 +232,21 @@ bool SEncodeMod::encode_partialstripe(int tid, vector<DIO_Info> v_dios)
         int fd = destdev->file_fd;
         uint64_t woffset = v_dios.at(dchunk).dev_offset;
         uint64_t wlen = v_dios.at(dchunk).length;
+        if (woffset == INT_MAX)
+        {
+
+            //打印pchunk_soff和v_dios[0].dev_offset里面的值(如果v_dio不为空的话)
+            cout << "woffset1: " << woffset << endl;
+            //如果v_dio不为空的话，打印v_dio的长度以及第一个元素的地址
+            if (v_dios.size() > 0)
+            {
+                cout << "v_dios.size: " << v_dios.size() << endl;
+                cout << "v_dios[0].devoffset: " << v_dios[0].dev_offset <<"v_dios[0].length:"<< v_dios[0].length << endl;
+            }
+            else {
+                cout << "v_dios is empty" << endl;
+            }
+        }
         iouring_wprep(&stdring[tid], fd, v_dios.at(dchunk).buf, woffset, wlen);
         // printf("Encoder: thischunk:%ld, datapos:%d  devoff:%ld, len:%ld\n", thischunk, vdatapos->at(thischunk), woffset, wlen);
         // printf("Encoder: v_endatabuf:%x\n", (int)v_endatabuf[tid].at(thischunk)[0]);
@@ -242,6 +257,21 @@ bool SEncodeMod::encode_partialstripe(int tid, vector<DIO_Info> v_dios)
         int fd = destdev->file_fd;
         uint64_t woffset = bat_dios.at(dchunk).dev_offset;
         uint64_t wlen = bat_dios.at(dchunk).length;
+        if (woffset == INT_MAX)
+        {
+
+            //打印pchunk_soff和v_dios[0].dev_offset里面的值(如果v_dio不为空的话)
+            cout << "woffset2: " << woffset << endl;
+            //如果v_dio不为空的话，打印v_dio的长度以及第一个元素的地址
+            if (v_dios.size() > 0)
+            {
+                cout << "v_dios.size: " << v_dios.size() << endl;
+                cout << "v_dios[0].devoffset: " << v_dios[0].dev_offset <<"v_dios[0].length:"<< v_dios[0].length << endl;
+            }
+            else {
+                cout << "v_dios is empty" << endl;
+            }
+        }
         iouring_wprep(&stdring[tid], fd, bat_dios.at(dchunk).buf, woffset, wlen);
         // printf("Encoder: thischunk:%ld, datapos:%d  devoff:%ld, len:%ld\n", thischunk, vdatapos->at(thischunk), woffset, wlen);
         // printf("Encoder: v_endatabuf:%x\n", (int)v_endatabuf[tid].at(thischunk)[0]);
@@ -258,7 +288,29 @@ bool SEncodeMod::encode_partialstripe(int tid, vector<DIO_Info> v_dios)
         int fd = destdev->file_fd;
         uint64_t woffset = pchunk_soff;
         uint64_t wlen = pchunk_slen;
+        // g-在此处加个调试信息的打印，如果woffset等于INT_MAX，说明这个地方有问题。
+        // if (woffset == INT_MAX)
+        // {
+
+        //     //打印pchunk_soff和v_dios[0].dev_offset里面的值(如果v_dio不为空的话)
+        //       cout << "pchunk_soff: " << pchunk_soff << endl;
+        //       cout << "woffest3: " << woffset << endl;
+        //     //如果v_dio不为空的话，打印v_dio的长度以及第一个元素的地址
+        //     if (v_dios.size() > 0)
+        //     {
+        //         // cout << "v_dios.size: " << v_dios.size() << endl;
+        //         cout << "v_dios[0].devoffset: " << v_dios[0].dev_offset <<"   v_dios[0].length:"<< v_dios[0].length << endl;
+        //     }
+        //     else {
+        //         cout << "v_dios is empty" << endl;
+        //     }
+
+        //     fflush(stdout);
+        // }
         iouring_wprep(&stdring[tid], fd, v_enparitybuf[tid].at(pchunk), woffset, wlen);
+
+        // cout << "v_dios[0].devoffset: " << v_dios[0].dev_offset <<"    success!!!"   << endl;
+
         // printf("Encoder: paritypos:%d  devoff:%ld, len:%ld\n", ppos, woffset, wlen);
         // printf("Encoder: v_enparitybuf:%x\n", (int)v_enparitybuf[tid].at(pchunk)[0]);
     }

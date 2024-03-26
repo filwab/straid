@@ -30,13 +30,15 @@ using namespace std;
 
 #define WRITE_IOSIZE (FULLSIZE)
 #define READ_IOSIZE (4 * KB)
+// #define WRITE_IOSIZE (PARTSIZE)
+// #define READ_IOSIZE (PARTSIZE)
 #define IO_COUNT (1000000)
 
 #define WRITE_DATA (2 * GB)
 #define READ_DATA (2 * GB)
 #define USER_IO_SPACE (50 * GB)
 
-#define WRITE_THREAD (20)
+#define WRITE_THREAD (1)
 #define READ_THREAD (NUM_THREADS-WRITE_THREAD)
 
 #define SEQ_IO (false)

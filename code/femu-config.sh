@@ -24,6 +24,9 @@ if [[ $# != 1 ]]; then
     echo "  19: fast_fail_switch"
     echo "LOG:"
     echo "  20: Straid log switch"
+    echo "control:"
+    echo "  21 : Base mode,      22 : IODA mode"
+    echo "  23 : Print courr gcs,     24 : Utiliz Inter ssd     25 : Show all  values"
     echo ""
     exit
 fi

@@ -124,6 +124,7 @@ void worker_run(int thread_id,
         }
         else
         {
+            // printf("Write STD | threadID:%d, off:%ld, len:%ld\n", thread_id, offset, length);
             UIO_Info iometa(thread_id, true, buf, offset, length);
             storagemod->raid_write_direct(iometa);
             G_DATA_WRITTEN.fetch_add(length);
@@ -189,9 +190,27 @@ int main(int argc, char *argv[])
 
     // Trace Files
     printf("Open Trace Files\n");
-    string tfile = "./Traces/fileserver_1.log";/*gql-change-log access*/
-    // string tfile = "./Traces/mytest.log";/*Gtodo:gql-change-log access*/
-    vector<string> v_tfileset{tfile};
+    // string tfile = "./Traces/fileserver_1.log";/*gql-change-log access*/
+    // string tfile = "./Traces/nload_80g.log";/*Gtodo:gql-change-log access*/
+    string tfile = "./Traces/hm_w.log";/*Gtodo:gql-change-log access*/
+
+    /* gql-MSR_trace_test */  
+    // string tfile = "./Traces/else/hm0.log";
+    // string tfile1 = "./Traces/else/vps.log";
+    // string tfile2 = "./Traces/else/wdev0.log";
+    
+    /* gql-YCSB_trace_test */  
+    // string tfile = "./Traces/else/ycsb01.log";
+    // string tfile1 = "./Traces/else/ycsb02.log";
+    // string tfile2 = "./Traces/else/ycsb03.log";
+
+    /* gql-Systor_trace_test */
+    // string tfile = "./Traces/else/sys01.log";  
+
+    // vector<string> v_tfileset{tfile};
+    // vector<string> v_tfileset{tfile2};
+    vector<string> v_tfileset{trace_file};
+    
     vector<ifstream *> v_tracefile;
     for (size_t i = 0; i < v_tfileset.size(); i++)//gql-v_tfileset中含有多个元素的时候-> 处理多文件的读写
     {
@@ -211,23 +230,30 @@ int main(int argc, char *argv[])
     assert(NUM_DEV == (DATACHUNK_NUM + PARITYCHUNK_NUM));
     srand(time(0));
 
-    //to change 
-    string lfile0 = "/dev/nvme0n1";
-    string lfile1 = "/dev/nvme1n1";
-    string lfile2 = "/dev/nvme2n1";
-    string lfile3 = "/dev/nvme3n1";
-    string lfile4 = "/dev/nvme4n1";
-    // string lfile5 = "/dev/nvme5n1p4";
+    // //to change 
+    // string lfile0 = "/dev/nvme0n1";
+    // string lfile1 = "/dev/nvme1n1";
+    // string lfile2 = "/dev/nvme2n1";
+    // string lfile3 = "/dev/nvme3n1";
+    // string lfile4 = "/dev/nvme4n1";
+    // // string lfile5 = "/dev/nvme5n1";
+    // // string lfile6 = "/dev/nvme6n1";
+    // // string lfile5 = "/dev/nvme5n1p4";
 
-    // string lfile0 = "/dev/ram0";
-    // string lfile1 = "/dev/ram1";
-    // string lfile2 = "/dev/ram2";
-    // string lfile3 = "/dev/ram3";
-    // string lfile4 = "/dev/ram4";
-    // string lfile5 = "/dev/ram5";
-    //vector<string> v_fileset{lfile0, lfile1, lfile2, lfile3, lfile4, lfile5};
+    // // string lfile0 = "/dev/ram0";
+    // // string lfile1 = "/dev/ram1";
+    // // string lfile2 = "/dev/ram2";
+    // // string lfile3 = "/dev/ram3";
+    // // string lfile4 = "/dev/ram4";
+    // // string lfile5 = "/dev/ram5";
+    // //vector<string> v_fileset{lfile0, lfile1, lfile2, lfile3, lfile4, lfile5};
     
-    vector<string> v_fileset{lfile0, lfile1, lfile2, lfile3, lfile4};
+    // vector<string> v_fileset{lfile0, lfile1, lfile2, lfile3, lfile4};
+    vector<string> v_fileset;
+    for (int i = 0; i < NUM_DEV; ++i) {
+        v_fileset.push_back("/dev/nvme" + to_string(i) + "n1");
+    }
+    
     assert(NUM_DEV <= v_fileset.size());
 
     cout << "Open Files" << endl;
@@ -254,6 +280,13 @@ int main(int argc, char *argv[])
     cout << "Generating StorageMod" << endl;
     StorageMod storagemod(&v_stdFiles, &metamod);
     GloStor = &storagemod;
+
+    cout << "clear io-lentency vector" << endl;
+    for (size_t i = 0; i < G_NUM_WORKERS; i++)
+    {
+        IO_LatArray[i].clear();
+        ReadIO_LatArray[i].clear();//gql-add
+    }
 
     for (size_t traces = 0; traces < v_tracefile.size(); traces++)//依次遍历v_tfileset文件列表，进行请求处理
     {
@@ -339,6 +372,8 @@ int main(int argc, char *argv[])
         my_print(v_tfileset.at(traces).c_str(), rec_read, tt_read);
         latency_print(v_tfileset.at(traces).c_str(), &this_citem.read_IOLat_list);
 
+        fflush(stdout);
+
 
         printf("Printing Results\n");
         outfile << v_tfileset.at(traces) << endl;
@@ -377,11 +412,16 @@ int main(int argc, char *argv[])
         outfile << endl;
 
         outfile << "Latancy CDF: " << endl;
-        for (size_t i = 0; i < 2000; i++)
-        {
-            float percent = (float)(i * 0.0005);
-            uint64_t pos = percent * this_citem.all_IOLat_list.size();
-            outfile << this_citem.all_IOLat_list.at(pos) << "\t";
+        if (!this_citem.all_IOLat_list.empty()) {
+            for (size_t i = 0; i < 1000; i++)
+            {
+                float percent = (float)(i * 0.001);
+                uint64_t pos = percent * this_citem.all_IOLat_list.size();
+                outfile << this_citem.all_IOLat_list.at(pos) << "\t";
+            }
+        } else {
+            // 处理this_citem.all_IOLat_list为空的情况，例如输出一条消息或者跳过输出等
+            outfile << "Latency CDF: N/A (No data)" << endl;
         }
         // //calculate latency after 90% requests
         // for (size_t i = 0; i < 1000; i++)
@@ -393,11 +433,16 @@ int main(int argc, char *argv[])
         outfile << endl;
 
         outfile << "Read Latancy CDF: " << endl;//gql-add
-        for (size_t i = 0; i < 2000; i++)
-        {
-            float percent = (float)(i * 0.0005);
-            uint64_t pos = percent * this_citem.read_IOLat_list.size();
-            outfile << this_citem.read_IOLat_list.at(pos) << "\t";
+        if (!this_citem.read_IOLat_list.empty()) {
+            for (size_t i = 0; i < 1000; i++) {
+                float percent = (float)(i * 0.001);
+                uint64_t pos = percent * this_citem.read_IOLat_list.size();
+                pos = std::min(pos, this_citem.read_IOLat_list.size() - 1); // 确保pos不会越界
+                outfile << this_citem.read_IOLat_list.at(pos) << "\t";
+            }
+        } else {
+            // 处理this_citem.read_IOLat_list为空的情况，例如输出一条消息或者跳过输出等
+            outfile << "Read Latency CDF: N/A (No data)" << endl;
         }
         // //calculate latency after 90% requests
         // for (size_t i = 0; i < 1000; i++)
@@ -426,3 +471,62 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+//根据以上代码，重新写一个函数，执行trace中的io请求，不同的是，将trace中的读请求全部预先写一遍，然后再执行trace中的所有请求，这样做的目的是放置读请求定向位置未写入数据
+void worker_run2(int thread_id,
+                StorageMod *storagemod,
+                vector<bool> *iodir_l,
+                vector<uint64_t> *off_l,
+                vector<uint64_t> *len_l,
+                // vector<bool>::const_iterator iodir_itr,
+                // vector<uint64_t>::const_iterator off_itr,
+                // vector<uint64_t>::const_iterator len_itr,
+                uint64_t count)
+{
+    cds::threading::Manager::attachThread();
+    char *buf;
+    int ret = posix_memalign((void **)&buf, ALIGN_SIZE, 100 * MB);
+    assert(ret == 0);
+
+    uint64_t offset = 0;
+    uint64_t length = 0;
+    bool iodir = 0;
+
+    for (size_t io = 0; io < count; io++)
+    {
+        offset = off_l->at(off_cnt.fetch_add(1));//gql-多个线程从同一个vector中取出一个值，原子操作保证请求按序被多个线程取下来执行
+        length = len_l->at(len_cnt.fetch_add(1));
+        iodir = iodir_l->at(iodir_cnt.fetch_add(1));
+
+        // uint64_t offset = *off_itr++;
+        // uint64_t length = *len_itr++;
+        // bool iodir = *iodir_itr++;
+
+        if (offset > USER_SPACE_LEN)
+        {
+            offset = offset % USER_SPACE_LEN;
+        }
+        if ((offset % ALIGN_SIZE) != 0)
+        {
+            offset = offset - (offset % (ALIGN_SIZE)) + ALIGN_SIZE;
+        }
+        if ((length % ALIGN_SIZE) != 0)
+        {
+            length = length - (length % (ALIGN_SIZE)) + ALIGN_SIZE;
+        }
+
+        // cout << io << " off: " << offset << "  len: " << length << endl;
+
+        tic(10 + thread_id);
+        if (iodir == 0)
+        {
+            UIO_Info iometa(thread_id, false, buf, offset, length);
+            storagemod->raid_read(iometa);
+            G_DATA_READ.fetch_add(length);
+            double rtime = toc(10 + thread_id);
+            ReadIO_LatArray[thread_id].emplace_back(rtime);//记录读请求的延迟
+        }
+
+    }
+
+}
+

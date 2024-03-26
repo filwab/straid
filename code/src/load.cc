@@ -415,6 +415,15 @@ int main(int argc, char *argv[])
     outfile << endl;
 
 
+    outfile << "READ Band Persec: "
+            << endl;
+    for (size_t i = 0; i < this_citem.RBand_persec.size() / 1; i++)
+    {
+        outfile << this_citem.RBand_persec.at(i) / 1024 / 1024 << "\t";
+    }
+    outfile << endl;
+    
+        
     outfile << "IOPS Persec: "
             << endl;
     for (size_t i = 0; i < this_citem.IOPS_persec.size() / 1; i++)

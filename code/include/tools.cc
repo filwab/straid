@@ -214,6 +214,10 @@ void my_print(const char *info, long int  rec_read,long int total_read)
 
 void latency_print(const char *info, vector<uint64_t> * read_IOLat)
 {
+    if (read_IOLat->empty()) {
+        printf("[%s] : read_IOLat is empty.\n", info);
+        return;
+    }
     int lenth = read_IOLat->size();
     int index_99 = lenth * 0.99;
     int index_995 = lenth * 0.995;
@@ -234,7 +238,6 @@ void latency_print(const char *info, vector<uint64_t> * read_IOLat)
     printf("[%s] - read tail latency result :\n", info);
     printf("Average latency: | 99.0%% latency: | 99.5%% latency: | 99.9%% latency: | 99.95%% latency:\n");
     printf("%.2f ms | %.2f ms | %.2f ms | %.2f ms | %.2f ms\n", avg_result_ms, result_99, result_995, result_999, result_9995);
-
 }
 
 int DropCaches(int drop)
@@ -274,6 +277,7 @@ atomic_uint64_t uring_error(0);
 
 void iouring_wprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length)
 {
+    // cout<<"before dev_off:"<<dev_off<<",length:"<<length<<endl;
     All_Write_Data.fetch_add(length);
     io_uring_sqe *sqe = NULL;
     sqe = io_uring_get_sqe(ring);
@@ -281,6 +285,7 @@ void iouring_wprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t
     iov->iov_base = buf;
     iov->iov_len = length;
     io_uring_prep_writev(sqe, fd, iov, 1, dev_off);
+    // cout<<"after dev_off:"<<dev_off<<",length:"<<length<<endl;
 }
 
 void iouring_rprep(io_uring *ring, int fd, char *buf, uint64_t dev_off, uint64_t length, uint64_t req_flag)

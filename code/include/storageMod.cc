@@ -444,6 +444,8 @@ void StorageMod::workers_run(int worker_id)
 
 uint64_t StorageMod::raid_write_direct(UIO_Info uio)
 {
+    //g-调试用，打印请求信息
+    // cout << "RAID write: " << uio.user_offset << " " << uio.length << endl;
     uint64_t io_count = 0;
     uint64_t worker_id = uio.user_id;
 
@@ -458,6 +460,11 @@ uint64_t StorageMod::raid_write_direct(UIO_Info uio)
         SSTEntry *sse = NULL;
         SST->search_SST(stripeid, sse);
         assert(sse != NULL);
+        //g-调试用，打印条带信息
+        // cout << "stripeid: " << stripeid << " " << sse->stripe_lock.load() << " " << sse->is_frozen.load() << " " << sse->SSTthreadid.load() << endl;
+        //g-打印此函数中调用的所有vector变量的size
+        //cout << "v_suios.size(): " << v_suios.size() << " v_batchque.size(): " << v_batchque.size() << " v_batchque2.size(): " << v_batchque2.size() << endl;
+
 
         bool handled = false;
         while (!handled)

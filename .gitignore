@@ -22,3 +22,8 @@ code/perf*
 code/bin/
 code/obj/
 code/results/
+
+# 忽略测试数据和统计数据
+
+code/Traces/*
+code/results/*

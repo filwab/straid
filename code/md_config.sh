@@ -3,9 +3,12 @@
 # Assign CHUNKSIZE with the length of the stripe chunk size
 CHUNKSIZE="64K"
 
+# Get the number of NVMe devices
+NUM_NVME_DEVICES=$(ls -1 /dev/nvme*n1 | wc -l)
+
 # Assign mdadm with SSD device directories
 # the [-n] parameter should be modified to the number of used SSD devices in the array
-mdadm -v -C /dev/md5 -l 5 -n 5 -c ${CHUNKSIZE} --force /dev/nvme0n1 /dev/nvme1n1 /dev/nvme2n1 /dev/nvme3n1 /dev/nvme4n1
+mdadm -v -C /dev/md5 -l 5 -n $NUM_NVME_DEVICES -c ${CHUNKSIZE} --force $(ls /dev/nvme*n1)
 
 sleep 3
 cat /proc/mdstat
