@@ -6,7 +6,7 @@ size_bytes=$((16*1024*1024*1024))  # 16GB转换为字节
 block_size=$((4*1024*1024))
 
 # 定义fio进行随机4k写入的数据量
-fio_size="5G"
+fio_size="1G"
 jobs_num="2"
 
 size="10G"
@@ -20,8 +20,8 @@ for device in /dev/nvme*n1; do
     # dd if=/dev/urandom of="$device" bs=$block_size count=$((size_bytes/block_size))  oflag=direct status=progress
     fio --name=seq_write_test --ioengine=libaio --numjobs=$jobs_num  --rw=write --bs=1M --direct=1 --group_reporting  --filename="$device"  
 
-    echo "开始对 $device 设备进行随机64K写入5GB数据..."
-    fio --name=rand_write_test --ioengine=libaio --numjobs=$jobs_num --rw=randwrite --bs=64K --direct=1 --size=$fio_size --group_reporting --filename="$device"
+    # echo "开始对 $device 设备进行随机64K写入1GB数据..."
+    # fio --name=rand_write_test --ioengine=libaio --numjobs=$jobs_num --rw=randwrite --bs=64K --direct=1 --size=$fio_size --group_reporting --filename="$device"
 
     echo "$device 设备写入完成!"
 done

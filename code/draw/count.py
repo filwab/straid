@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-input_path = '../Traces/hmr/'
+input_path = '../Traces/8ssd_trace/10m_range/'
 output_path = '../Traces/off_dis/'
 
 #统计负载偏移变化分布
@@ -34,6 +34,7 @@ def plot_offset_distribution(lfile):
     plt.grid(True)
     plt.savefig(output_path + lfile[:-4]+'_off_dis.png')
 
+files = ["hm0.log","mds1.log","rsrch0.log","wdev0.log"]
 
-file= 'hm_fh_range.log'
-plot_offset_distribution(file)
+for file in files:
+    plot_offset_distribution(file)

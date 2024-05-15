@@ -27,7 +27,8 @@ if [[ $# != 1 ]]; then
     echo "control:"
     echo "  21 : Base mode,      22 : IODA mode"
     echo "  23 : Print courr gcs,     24 : Utiliz Inter ssd     25 : Show all  values"
-    echo ""
+    echo "  26 : buffer_mode(+group_gc),     27 :group_gc_switch     28 : Group  info"
+    echo "  29 : gc-steering-mod"
     exit
 fi
 

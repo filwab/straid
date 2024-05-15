@@ -21,7 +21,7 @@ using namespace std;
 
 #define FULLSIZE (DATACHUNK_NUM * SCHUNK_SIZE)
 #define PARTSIZE (SCHUNK_SIZE)
-#define DATACHUNK_NUM (4)                              // Number of data chunks // to change 
+#define DATACHUNK_NUM (7)                              // Number of data chunks // to change 
 #define PARITYCHUNK_NUM (1)                            // Number of parity chunks //to change 
 #define NUM_DEVFILES (DATACHUNK_NUM + PARITYCHUNK_NUM) 
 #define NUM_WORKERS NUM_THREADS                        // Number of RAID worker threads
@@ -30,12 +30,12 @@ using namespace std;
 #define DATASET_SIZE (1 * GB)
 #define WARM_SPACE_LEN (16 * GB)
 #define LOOP (1) // workload loop num
-#define USER_SPACE_LEN (50 * GB)
+#define USER_SPACE_LEN (90 * GB)
 // #define IO_SIZE (64 * KB) 
  #define IO_SIZE (PARTSIZE) // to choose
 //#define IO_SIZE (FULLSIZE) // to choose 
 
-#define STRA_SPACE_LEN (50 * GB) // RAID Space footprint in a SSD
+#define STRA_SPACE_LEN (90 * GB) // RAID Space footprint in a SSD
 #define SCHUNK_SIZE (64 * KB)
 #define SSTRIPE_SIZE (SCHUNK_SIZE * NUM_DEVFILES)
 #define SSTRIPE_DATASIZE (SCHUNK_SIZE * DATACHUNK_NUM)

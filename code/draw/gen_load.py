@@ -5,30 +5,32 @@ KB = 1024
 MB = 1024*1024
 GB = 1024*1024*1024
 
-total_io_size = (0.1 * GB)  # 总 IO 大小，读写请求共享
-offset_range = (0, 50 * GB)  # IO 请求的范围
-system_capacity = (50 *  GB)  # 系统容量
-write_ratio = 0.70  # 写操作比例
+total_io_size = (90 * GB)  # 总 IO 大小，读写请求共享
+offset_range = (0, 110 * GB)  # IO 请求的范围
+write_ratio = 1  # 写操作比例
+chunk_size = (64 * KB)  # 系统块大小
 
 current_io_size = 0
 written_data = []  # 记录已写入的数据区域
 
 # 读写请求的iosize列表
 rio_list = [4*KB, 16*KB, 32*KB, 64*KB, 80*KB, 128*KB,]  # 读请求的iosize值列表
-rio_weights = [35, 5, 5,  5, 10, 35] 
-wio_list = [4*KB, 64*KB, 64*2*KB, 80*KB, 96*KB, 128*KB]  # 写请求的iosize值列表
-wio_weights = [3, 1, 5, 1, 1, 1 ]
+rio_weights = [35, 20, 5,  5, 10, 15] 
+wio_list = [4*KB, 64*KB, 64*2*KB, 80*KB, 96*KB, 128*KB,256*KB,512*KB]  # 写请求的iosize值列表
+wio_weights = [3, 1, 5, 1, 1, 1, 1, 1]
 
 
 # 创建并打开文件用于写入
-with open("../Traces/nload_01g.log", "w") as file:
+with open("../Traces/9_warm.log", "w") as file:
     
     while current_io_size < total_io_size:
         if random.random() < write_ratio or not written_data:
             # 执行写操作
             operation = 'W'
-            iosize = random.choices(wio_list, wio_weights)[0]
+            # iosize = random.choices(wio_list, wio_weights)[0]
             offset = random.randint(offset_range[0], offset_range[1])
+            iosize = 1*MB
+            # offset = random.randint(offset_range[0], offset_range[1])
             written_data.append((offset, iosize))
             
         else:
@@ -38,7 +40,7 @@ with open("../Traces/nload_01g.log", "w") as file:
             offset, max_iosize = written_data[read_index]
             iosize = random.choices(rio_list, rio_weights)[0]
   
-        offset = (offset//iosize) * iosize
+        offset = (offset//chunk_size) * chunk_size
         current_io_size += iosize
         file.write(f"{operation}\t{offset}\t{iosize}\n")
 

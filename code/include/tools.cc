@@ -236,8 +236,8 @@ void latency_print(const char *info, vector<uint64_t> * read_IOLat)
 
     //打印平均延迟，尾延迟
     printf("[%s] - read tail latency result :\n", info);
-    printf("Average latency: | 99.0%% latency: | 99.5%% latency: | 99.9%% latency: | 99.95%% latency:\n");
-    printf("%.2f ms | %.2f ms | %.2f ms | %.2f ms | %.2f ms\n", avg_result_ms, result_99, result_995, result_999, result_9995);
+    printf("Average latency: | 99.0%% latency: | 99.5%% latency: | 99.9%% latency: | 99.95%% latency: | 99.99%% latency:\n");
+    printf("%.2f ms | %.2f ms | %.2f ms | %.2f ms | %.2f ms | %.2f ms\n", avg_result_ms, result_99, result_995, result_999, result_9995, result_9999);
 }
 
 int DropCaches(int drop)
