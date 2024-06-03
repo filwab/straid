@@ -5,8 +5,8 @@ KB = 1024
 MB = 1024*1024
 GB = 1024*1024*1024
 
-total_io_size = (90 * GB)  # 总 IO 大小，读写请求共享
-offset_range = (0, 110 * GB)  # IO 请求的范围
+total_io_size = (20 * GB)  # 总 IO 大小，读写请求共享
+offset_range = (0, 85 * GB)  # IO 请求的范围
 write_ratio = 1  # 写操作比例
 chunk_size = (64 * KB)  # 系统块大小
 
@@ -19,9 +19,11 @@ rio_weights = [35, 20, 5,  5, 10, 15]
 wio_list = [4*KB, 64*KB, 64*2*KB, 80*KB, 96*KB, 128*KB,256*KB,512*KB]  # 写请求的iosize值列表
 wio_weights = [3, 1, 5, 1, 1, 1, 1, 1]
 
+ran_wio = [4*KB, 16*KB, 64*KB, 80*KB, 96*KB]
+
 
 # 创建并打开文件用于写入
-with open("../Traces/9_warm.log", "w") as file:
+with open("../Traces/8ssd_trace/8_warm_20g.log", "w") as file:
     
     while current_io_size < total_io_size:
         if random.random() < write_ratio or not written_data:
@@ -29,7 +31,9 @@ with open("../Traces/9_warm.log", "w") as file:
             operation = 'W'
             # iosize = random.choices(wio_list, wio_weights)[0]
             offset = random.randint(offset_range[0], offset_range[1])
-            iosize = 1*MB
+            offset = offset//(4*KB)*(4*KB)
+            iosize = random.choices(ran_wio, [0.4, 0.2, 0.2, 0.1, 0.1])[0]
+            # iosize = 1*MB
             # offset = random.randint(offset_range[0], offset_range[1])
             written_data.append((offset, iosize))
             

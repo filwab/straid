@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import re
+from collections import Counter
 
 input_path = '../Traces/8ssd_trace/10m_range/'
 output_path = '../Traces/off_dis/'
@@ -34,7 +36,81 @@ def plot_offset_distribution(lfile):
     plt.grid(True)
     plt.savefig(output_path + lfile[:-4]+'_off_dis.png')
 
+
+def static_logfile(lfile):
+    # 初始化计数器
+    read_count = 0
+    write_count = 0
+    total_read_io = 0
+    total_write_io = 0
+
+    log_file_path = input_path + lfile
+    with open(log_file_path, 'r') as logfile:
+        for line in logfile:
+            parts = re.split(r'\s+', line.strip())
+            if len(parts) != 3:
+                continue
+            
+            io_type = parts[0]
+            io_size = int(parts[2])
+            
+            if io_type == 'R':
+                read_count += 1
+                total_read_io += io_size
+            elif io_type == 'W':
+                write_count += 1
+                total_write_io += io_size
+
+    # 计算总的IOsize，以GB为单位
+    total_read_io_gb = total_read_io / (1024 * 1024 * 1024)
+    total_write_io_gb = total_write_io / (1024 * 1024 * 1024)
+
+    # 输出统计结果t
+    print("\n\n result of "+lfile+" : ")
+    print(f'读请求数量: {read_count}')
+    print(f'写请求数量: {write_count}')
+    print(f'读请求总的IOsize (GB): {total_read_io_gb:.2f}')
+    print(f'写请求总的IOsize (GB): {total_write_io_gb:.2f}')
+
+    #close file
+    logfile.close()
+
+    # 进阶统计读写，io值种类，并将值除以1024以KB显示
+    print('进阶统计 (IOsize以KB为单位):')
+    io_sizes_kb = Counter()
+
+    with open(log_file_path, 'r') as logfile:
+        for line in logfile:
+            parts = re.split(r'\s+', line.strip())
+            if len(parts) != 3:
+                continue
+            
+            io_size_kb = int(parts[2]) / 1024
+            io_size_kb = round(io_size_kb, 2)
+        
+            io_sizes_kb[io_size_kb] += 1
+
+    # for size, count in sorted(io_sizes_kb.items()):
+    #     print(f'{count} 次: {size} KB')
+    # #只打印io_sizes_kb前10个值
+    # print("io_sizes_kb前10个值:")
+    # i = 0
+    # for size, count in sorted(io_sizes_kb.items()):
+    #     print(f'{count} 次: {size} KB')
+    #     i += 1
+    #     if i == 10:
+    #         break
+    # 打印出现次数最多的十种值
+    print('出现次数最多的十种IOsize (以KB为单位):')
+    for size, count in io_sizes_kb.most_common(10):
+        print(f'{count} 次: {size} KB')
+    
+    
+    #close file
+    logfile.close()
+
+
 files = ["hm0.log","mds1.log","rsrch0.log","wdev0.log"]
 
 for file in files:
-    plot_offset_distribution(file)
+    static_logfile(file)

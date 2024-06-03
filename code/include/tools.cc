@@ -205,7 +205,7 @@ void my_print(const char *info, long int  rec_read,long int total_read)
 {
     printf("[%s] | "
            "reconstrcut read num: %ld | "
-           "total read num: %ld | "
+           "total read num: %ld  "
            "\n",
            info,
            rec_read,

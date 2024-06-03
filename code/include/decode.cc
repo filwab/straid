@@ -13,7 +13,7 @@
 
 #include "isa-l.h"
 
-#define RECONST_MOD
+// #define RECONST_MOD
 // #define DEGRADE
 extern atomic_bool proc_end_flag;
 extern atomic_uint64_t All_Read_Data;

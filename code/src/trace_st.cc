@@ -367,6 +367,7 @@ int main(int argc, char *argv[])
 
         //Gtodo:以下代码为打印输出
         print_throughtput(this_citem.all_data_read+this_citem.all_data_written, trace_off.size(), timer, v_tfileset.at(traces).c_str());
+        printf("[%s] | write: %.2lf MB/s | read: %.2lf MB/s \n",v_tfileset.at(traces).c_str(), (this_citem.all_data_written/1024/1024) / (timer/1000000000),(this_citem.all_data_read/1024/1024) / (timer/1000000000));
         uint64_t rec_read = RECONST_REQ_NUM.load();
         uint64_t tt_read = TOTAL_READ_NUM.load();
         my_print(v_tfileset.at(traces).c_str(), rec_read, tt_read);
