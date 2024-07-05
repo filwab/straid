@@ -3,7 +3,7 @@ import numpy as np
 import re
 from collections import Counter
 
-input_path = '../Traces/8ssd_trace/10m_range/'
+input_path = '../Traces/8ssd_trace/aliTrace/'
 output_path = '../Traces/off_dis/'
 
 #统计负载偏移变化分布
@@ -37,6 +37,7 @@ def plot_offset_distribution(lfile):
     plt.savefig(output_path + lfile[:-4]+'_off_dis.png')
 
 
+#统计负载的读写请求和大小分布。
 def static_logfile(lfile):
     # 初始化计数器
     read_count = 0
@@ -69,6 +70,7 @@ def static_logfile(lfile):
     print("\n\n result of "+lfile+" : ")
     print(f'读请求数量: {read_count}')
     print(f'写请求数量: {write_count}')
+    print(f'读请求比例: {read_count / (read_count + write_count):.2%}')
     print(f'读请求总的IOsize (GB): {total_read_io_gb:.2f}')
     print(f'写请求总的IOsize (GB): {total_write_io_gb:.2f}')
 
@@ -110,7 +112,7 @@ def static_logfile(lfile):
     logfile.close()
 
 
-files = ["hm0.log","mds1.log","rsrch0.log","wdev0.log"]
+files = ["112.log","131.log","188.log","251.log","295.log","64.log","fileserver_1.log","nload_160g.log","nload_160g_r.log"]
 
 for file in files:
     static_logfile(file)

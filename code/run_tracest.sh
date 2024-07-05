@@ -16,7 +16,7 @@ trace_path7="./Traces/7ssd/"
 # trace_file="./Traces/8ssd_trace/aliTrace/504.log"
 
 trace_group=("64.log" "112.log" "131.log" "188.log" "251.log" "295.log")
-trace_groupio=("filserver_1.log" "nload_160g_r.log" "nlad_160g.log" "7_ycsb02.log")
+trace_groupio=("fileserver_1.log" "nload_160g_r.log" "nload_160g.log" "7_ycsb02.log")
 # trace_group=("295.log")
 
 for file in "${trace_groupio[@]}"
